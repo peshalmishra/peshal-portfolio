@@ -1,0 +1,12 @@
+D:\portfolio_latest\src\components\About.tsx:87 [WARN] @next/next/no-img-element
+D:\portfolio_latest\src\components\Footer.tsx:154 [WARN] @next/next/no-img-element
+D:\portfolio_latest\src\components\Hero.tsx:154 [WARN] @next/next/no-img-element
+D:\portfolio_latest\src\components\Hero.tsx:163 [WARN] @next/next/no-img-element
+D:\portfolio_latest\src\components\Hero.tsx:172 [WARN] @next/next/no-img-element
+D:\portfolio_latest\src\components\ParticleBackground.tsx:24 [WARN] @typescript-eslint/no-unused-vars
+D:\portfolio_latest\src\components\Projects.tsx:4 [WARN] @typescript-eslint/no-unused-vars
+D:\portfolio_latest\src\components\Projects.tsx:251 [WARN] @next/next/no-img-element
+D:\portfolio_latest\src\components\Projects.tsx:600 [ERROR] react/no-unescaped-entities
+D:\portfolio_latest\src\components\Projects.tsx:679 [ERROR] react/no-unescaped-entities
+D:\portfolio_latest\src\components\Projects.tsx:794 [WARN] @next/next/no-img-element
+D:\portfolio_latest\src\components\ThemeToggle.tsx:13 [ERROR] react-hooks/set-state-in-effect

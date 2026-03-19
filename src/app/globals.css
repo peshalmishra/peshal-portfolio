@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+}
+
+:root {
+  --background: #fdfdfd;
+  --foreground: #111111;
+}
+
+.dark {
+  --background: #0b0b0f;
+  --foreground: #ededed;
+}
+
+html {
+  overflow-x: hidden;
+  cursor: none;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  overflow-x: hidden;
+  cursor: none;
+  position: relative;
+}
+
+/* Hide default cursor on all interactive elements — CustomCursor takes over */
+*, *::before, *::after,
+a, button, input, textarea, select, label, [role="button"] {
+  cursor: none !important;
+}
+
+/* ============================================================================
+   CLOCK CUTOUT MASKS
+   The --mask-radius MUST equal exactly half the clock's rendered diameter plus
+   a tiny gap (2px). Clock sizes in Hero.tsx:
+     md → w-56  h-56  = 14rem → half = 7rem  → mask-radius: calc(7rem  + 2px)
+     lg → w-72  h-72  = 18rem → half = 9rem  → mask-radius: calc(9rem  + 2px)
+     xl → w-[22rem]   = 22rem → half = 11rem → mask-radius: calc(11rem + 2px)
+   ============================================================================ */
+
+@media (min-width: 768px) {
+
+  .cutout-top {
+    position: relative;
+    --mask-radius: calc(7rem + 2px);
+    mask: radial-gradient(
+      circle at 50% calc(100% + var(--gap, 0px)),
+      transparent calc(var(--mask-radius) - 0.5px),
+      black       calc(var(--mask-radius) + 0.5px)
+    );
+    -webkit-mask: radial-gradient(
+      circle at 50% calc(100% + var(--gap, 0px)),
+      transparent calc(var(--mask-radius) - 0.5px),
+      black       calc(var(--mask-radius) + 0.5px)
+    );
+  }
+
+  .cutout-top::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translate(-50%, -50%);
+    width:  calc(var(--mask-radius) * 2);
+    height: calc(var(--mask-radius) * 2);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #e5e7eb;
+    pointer-events: none;
+    z-index: 50;
+  }
+  .dark .cutout-top::before {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+
+  .cutout-bottom {
+    position: relative;
+    --mask-radius: calc(7rem + 2px);
+    mask: radial-gradient(
+      circle at 50% 0px,
+      transparent calc(var(--mask-radius) - 0.5px),
+      black       calc(var(--mask-radius) + 0.5px)
+    );
+    -webkit-mask: radial-gradient(
+      circle at 50% 0px,
+      transparent calc(var(--mask-radius) - 0.5px),
+      black       calc(var(--mask-radius) + 0.5px)
+    );
+  }
+
+  .cutout-bottom::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -50%);
+    width:  calc(var(--mask-radius) * 2);
+    height: calc(var(--mask-radius) * 2);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #e5e7eb;
+    pointer-events: none;
+    z-index: 50;
+  }
+  .dark .cutout-bottom::before {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+}
+
+@media (min-width: 1024px) {
+  .cutout-top,
+  .cutout-bottom {
+    --mask-radius: calc(9rem + 2px);
+  }
+}
+
+@media (min-width: 1280px) {
+  .cutout-top,
+  .cutout-bottom {
+    --mask-radius: calc(11rem + 2px);
+  }
+}
+
+/* ============================================================================
+   BENTO CARD GLOW
+   ============================================================================ */
+
+.bento-card {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 0 16px 0  rgba(0, 0, 0, 0.04),
+    0 1px 3px 0 rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s ease;
+}
+
+.bento-card:hover {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 0 28px 0  rgba(0, 0, 0, 0.07),
+    0 2px 8px 0 rgba(0, 0, 0, 0.08);
+}
+
+.dark .bento-card {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 0 20px 2px rgba(255, 255, 255, 0.04),
+    0 0 60px 4px rgba(200, 210, 255, 0.03);
+}
+
+.dark .bento-card:hover {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.09),
+    0 0 28px 4px rgba(255, 255, 255, 0.07),
+    0 0 80px 8px rgba(200, 210, 255, 0.05);
+}
+
+* {
+  cursor: none;
+}
+/* ============================================================================
+   SKILLS MARQUEE ANIMATIONS
+   ============================================================================ */
+
+@keyframes banner-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-33.333%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [style*="banner-scroll"],
+  [style*="marquee"] {
+    animation: none !important;
+  }
+}
