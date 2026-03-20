@@ -221,7 +221,7 @@ export function Projects() {
                                     filter:  position === 0 ? "blur(0px) brightness(1)" : "blur(6px) brightness(0.4)",
                                 }}
                                 transition={{ type: "spring", stiffness: 80, damping: 20, mass: 1.2 }}
-                                className={`absolute inset-0 flex flex-col p-6 md:p-8 rounded-[2.5rem] overflow-hidden border transition-colors duration-300 group
+                                className={`absolute inset-0 flex flex-col p-6 md:p-8 rounded-3xl overflow-hidden border transition-colors duration-300 group
                                     ${position === 0
                                         ? "bg-neutral-100/90 dark:bg-black/40 border-white/40 dark:border-white/10 backdrop-blur-3xl shadow-[0_12px_44px_0_rgba(0,0,0,0.2)] dark:shadow-[0_4px_32px_0_rgba(255,255,255,0.03)]"
                                         : "bg-neutral-200/50 dark:bg-neutral-900/40 border-transparent"
@@ -236,7 +236,7 @@ export function Projects() {
                                 aria-hidden={position !== 0}
                             >
                                 {position === 0 && (
-                                    <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-tr from-transparent via-white/5 to-white/20 dark:to-white/10 pointer-events-none" />
+                                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-transparent via-white/5 to-white/20 dark:to-white/10 pointer-events-none" />
                                 )}
                                 <div className="w-full h-[45%] mb-6 rounded-2xl overflow-hidden relative border border-white/10 dark:border-white/5">
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent z-10 pointer-events-none rounded-2xl" />
@@ -398,11 +398,11 @@ const SKILL_CATEGORIES = [
 
 // Static orb positions — deterministic, no hydration mismatch
 const ORB_POSITIONS = [
-    { top: "10%",  left: "15%",  w: 320, h: 320, color: "#38bdf8", dur: 18 },
-    { top: "60%",  left: "70%",  w: 280, h: 280, color: "#818cf8", dur: 22 },
-    { top: "40%",  left: "40%",  w: 200, h: 200, color: "#34d399", dur: 15 },
-    { top: "75%",  left: "10%",  w: 240, h: 240, color: "#f472b6", dur: 25 },
-    { top: "5%",   left: "75%",  w: 180, h: 180, color: "#fb923c", dur: 20 },
+    { top: "10%",  left: "15%",  w: 400, h: 400, color: "#38bdf8", dur: 18 },
+    { top: "55%",  left: "65%",  w: 360, h: 360, color: "#818cf8", dur: 22 },
+    { top: "35%",  left: "38%",  w: 280, h: 280, color: "#34d399", dur: 15 },
+    { top: "70%",  left: "8%",   w: 320, h: 320, color: "#f472b6", dur: 25 },
+    { top: "2%",   left: "72%",  w: 260, h: 260, color: "#fb923c", dur: 20 },
 ];
 
 function ProjectsSkills() {
@@ -418,10 +418,10 @@ function ProjectsSkills() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative w-full mt-32 px-4 pb-4 overflow-hidden"
+            className="relative w-full mt-32 px-4 pb-4" style={{ minHeight: "800px" }}
         >
             {/* ── Rotating orb background ─────────────────────────────────── */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
+            <div className="absolute inset-0 pointer-events-none text-neutral-400 dark:text-white" style={{ minHeight: "100%", height: "100%" }} aria-hidden>
                 {ORB_POSITIONS.map((orb, i) => (
                     <motion.div
                         key={i}
@@ -431,8 +431,8 @@ function ProjectsSkills() {
                             left:   orb.left,
                             width:  orb.w,
                             height: orb.h,
-                            background: `radial-gradient(circle, ${orb.color}18 0%, transparent 70%)`,
-                            filter: "blur(40px)",
+                            background: `radial-gradient(circle, ${orb.color}55 0%, transparent 70%)`,
+                            filter: "blur(60px)",
                         }}
                         animate={{
                             x:       [0, 30, -20, 15, 0],
@@ -452,26 +452,27 @@ function ProjectsSkills() {
                 {/* Slow rotating ring */}
                 <motion.div
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                    style={{ width: 600, height: 600 }}
+                    style={{ width: 700, height: 700 }}
                     animate={{ rotate: 360 }}
                     transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
                 >
-                    <svg viewBox="0 0 600 600" className="w-full h-full opacity-[0.04] dark:opacity-[0.07]">
-                        <circle cx="300" cy="300" r="250" fill="none" stroke="white" strokeWidth="1" strokeDasharray="8 12"/>
-                        <circle cx="300" cy="300" r="180" fill="none" stroke="white" strokeWidth="0.5" strokeDasharray="4 16"/>
-                        <circle cx="300" cy="300" r="110" fill="none" stroke="white" strokeWidth="0.5" strokeDasharray="2 20"/>
+                    <svg viewBox="0 0 700 700" width="700" height="700" style={{ opacity: 0.7 }}>
+                        <circle cx="350" cy="350" r="300" fill="none" stroke="#818cf8" strokeWidth="1.5" strokeDasharray="8 12"/>
+                        <circle cx="350" cy="350" r="220" fill="none" stroke="#38bdf8" strokeWidth="1.2" strokeDasharray="4 16"/>
+                        <circle cx="350" cy="350" r="140" fill="none" stroke="#f472b6" strokeWidth="1.2" strokeDasharray="2 20"/>
                     </svg>
                 </motion.div>
 
                 {/* Counter-rotating inner ring */}
                 <motion.div
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                    style={{ width: 400, height: 400 }}
+                    style={{ width: 500, height: 500 }}
                     animate={{ rotate: -360 }}
                     transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
                 >
-                    <svg viewBox="0 0 400 400" className="w-full h-full opacity-[0.03] dark:opacity-[0.06]">
-                        <circle cx="200" cy="200" r="160" fill="none" stroke="white" strokeWidth="1" strokeDasharray="3 9"/>
+                    <svg viewBox="0 0 500 500" width="500" height="500" style={{ opacity: 0.6 }}>
+                        <circle cx="250" cy="250" r="200" fill="none" stroke="#34d399" strokeWidth="1.5" strokeDasharray="3 9"/>
+                        <circle cx="250" cy="250" r="120" fill="none" stroke="#fb923c" strokeWidth="1.2" strokeDasharray="5 15"/>
                     </svg>
                 </motion.div>
             </div>
@@ -1606,7 +1607,7 @@ function CertCard({ cert, index }: { cert: Certificate; index: number }) {
 
                 {/* Coming-soon overlay */}
                 {isPlaceholder && (
-                    <div className="absolute inset-0 z-20 flex items-center justify-center rounded-2xl backdrop-blur-[2px] bg-white/60 dark:bg-black/60">
+                    <div className="absolute inset-0 z-20 flex items-center justify-center rounded-2xl bg-white/60 dark:bg-black/60" style={{ backdropFilter: "blur(2px)" }}>
                         <div className="flex flex-col items-center gap-2">
                             <div className="w-10 h-10 rounded-full border-2 border-dashed flex items-center justify-center"
                                 style={{ borderColor: cert.color }}>
@@ -1727,10 +1728,10 @@ function Certificates() {
         >
             {/* Ambient background glow */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[120px] opacity-[0.06] dark:opacity-[0.10]"
-                    style={{ background: "radial-gradient(circle, #a855f7, transparent)" }} />
-                <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-[100px] opacity-[0.05] dark:opacity-[0.08]"
-                    style={{ background: "radial-gradient(circle, #3b82f6, transparent)" }} />
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full rounded-full"
+                    style={{ background: "radial-gradient(circle, #a855f7, transparent)", filter: "blur(120px)", opacity: 0.08 }} />
+                <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full"
+                    style={{ background: "radial-gradient(circle, #3b82f6, transparent)", filter: "blur(100px)", opacity: 0.06 }} />
                 {/* Floating dots */}
                 {particles.map((p) => (
                     <motion.div
