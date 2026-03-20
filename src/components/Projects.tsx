@@ -314,10 +314,331 @@ export function Projects() {
                 ))}
             </div>
 
+            <ProjectsSkills />
             <GitHubActivity />
             <Certificates />
             <BehindTheCurtains />
         </section>
+    );
+}
+
+
+// ===========================================================================
+// PROJECTS SKILLS — rotating orb background + categorised skill grid
+// ===========================================================================
+
+const SKILL_CATEGORIES = [
+    {
+        label: "Frontend",
+        color: "#38bdf8",
+        colorEnd: "#818cf8",
+        icon: (
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+            </svg>
+        ),
+        skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "HTML/CSS"],
+    },
+    {
+        label: "Backend",
+        color: "#34d399",
+        colorEnd: "#059669",
+        icon: (
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+        ),
+        skills: ["Node.js", "Express", "Spring Boot", "FastAPI", "REST APIs", "GraphQL"],
+    },
+    {
+        label: "Cloud & DevOps",
+        color: "#fb923c",
+        colorEnd: "#f59e0b",
+        icon: (
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+            </svg>
+        ),
+        skills: ["AWS", "Docker", "Kubernetes", "Terraform", "CI/CD", "Linux"],
+    },
+    {
+        label: "Databases",
+        color: "#c084fc",
+        colorEnd: "#a855f7",
+        icon: (
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+        ),
+        skills: ["PostgreSQL", "MongoDB", "Redis", "MySQL", "DynamoDB", "Kafka"],
+    },
+    {
+        label: "Languages",
+        color: "#f472b6",
+        colorEnd: "#ec4899",
+        icon: (
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            </svg>
+        ),
+        skills: ["Java", "Python", "TypeScript", "Go", "JavaScript", "Bash"],
+    },
+    {
+        label: "Tools",
+        color: "#94a3b8",
+        colorEnd: "#64748b",
+        icon: (
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+            </svg>
+        ),
+        skills: ["Git", "GitHub", "VS Code", "Postman", "Jira", "Figma"],
+    },
+];
+
+// Static orb positions — deterministic, no hydration mismatch
+const ORB_POSITIONS = [
+    { top: "10%",  left: "15%",  w: 320, h: 320, color: "#38bdf8", dur: 18 },
+    { top: "60%",  left: "70%",  w: 280, h: 280, color: "#818cf8", dur: 22 },
+    { top: "40%",  left: "40%",  w: 200, h: 200, color: "#34d399", dur: 15 },
+    { top: "75%",  left: "10%",  w: 240, h: 240, color: "#f472b6", dur: 25 },
+    { top: "5%",   left: "75%",  w: 180, h: 180, color: "#fb923c", dur: 20 },
+];
+
+function ProjectsSkills() {
+    const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
+
+    const displayed = activeCategory
+        ? SKILL_CATEGORIES.filter(c => c.label === activeCategory)
+        : SKILL_CATEGORIES;
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="relative w-full mt-32 px-4 pb-4 overflow-hidden"
+        >
+            {/* ── Rotating orb background ─────────────────────────────────── */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
+                {ORB_POSITIONS.map((orb, i) => (
+                    <motion.div
+                        key={i}
+                        className="absolute rounded-full"
+                        style={{
+                            top:    orb.top,
+                            left:   orb.left,
+                            width:  orb.w,
+                            height: orb.h,
+                            background: `radial-gradient(circle, ${orb.color}18 0%, transparent 70%)`,
+                            filter: "blur(40px)",
+                        }}
+                        animate={{
+                            x:       [0, 30, -20, 15, 0],
+                            y:       [0, -20, 25, -10, 0],
+                            scale:   [1, 1.08, 0.94, 1.04, 1],
+                            opacity: [0.6, 0.9, 0.5, 0.8, 0.6],
+                        }}
+                        transition={{
+                            duration: orb.dur,
+                            repeat:   Infinity,
+                            ease:     "easeInOut",
+                            delay:    i * 1.2,
+                        }}
+                    />
+                ))}
+
+                {/* Slow rotating ring */}
+                <motion.div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                    style={{ width: 600, height: 600 }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                >
+                    <svg viewBox="0 0 600 600" className="w-full h-full opacity-[0.04] dark:opacity-[0.07]">
+                        <circle cx="300" cy="300" r="250" fill="none" stroke="white" strokeWidth="1" strokeDasharray="8 12"/>
+                        <circle cx="300" cy="300" r="180" fill="none" stroke="white" strokeWidth="0.5" strokeDasharray="4 16"/>
+                        <circle cx="300" cy="300" r="110" fill="none" stroke="white" strokeWidth="0.5" strokeDasharray="2 20"/>
+                    </svg>
+                </motion.div>
+
+                {/* Counter-rotating inner ring */}
+                <motion.div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                    style={{ width: 400, height: 400 }}
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+                >
+                    <svg viewBox="0 0 400 400" className="w-full h-full opacity-[0.03] dark:opacity-[0.06]">
+                        <circle cx="200" cy="200" r="160" fill="none" stroke="white" strokeWidth="1" strokeDasharray="3 9"/>
+                    </svg>
+                </motion.div>
+            </div>
+
+            {/* ── Section heading ──────────────────────────────────────────── */}
+            <div className="relative text-center mb-16">
+                <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    className="text-[11px] tracking-[0.3em] font-medium text-neutral-500 uppercase mb-4"
+                >
+                    What I Work With
+                </motion.p>
+                <div className="overflow-hidden">
+                    <motion.h2
+                        initial={{ y: 60, opacity: 0 }}
+                        whileInView={{ y: 0, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+                        className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight text-neutral-900 dark:text-white leading-none"
+                    >
+                        Skills &amp;
+                    </motion.h2>
+                </div>
+                <div className="overflow-hidden">
+                    <motion.h2
+                        initial={{ y: 60, opacity: 0 }}
+                        whileInView={{ y: 0, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.7, delay: 0.08, ease: [0.23, 1, 0.32, 1] }}
+                        className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-none mt-1"
+                    >
+                        <span
+                            className="font-serif italic"
+                            style={{
+                                background: "linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #f472b6 100%)",
+                                WebkitBackgroundClip: "text",
+                                WebkitTextFillColor:  "transparent",
+                                backgroundClip:       "text",
+                            }}
+                        >
+                            Technologies
+                        </span>
+                    </motion.h2>
+                </div>
+                <motion.div
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                    className="mx-auto mt-8 h-px w-32 origin-center"
+                    style={{ background: "linear-gradient(90deg, transparent, #818cf8, #38bdf8, transparent)" }}
+                />
+            </div>
+
+            {/* ── Category filter tabs ─────────────────────────────────────── */}
+            <div className="relative flex flex-wrap justify-center gap-2 mb-12 max-w-3xl mx-auto">
+                <button
+                    onClick={() => setActiveCategory(null)}
+                    className={`px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 border
+                        ${activeCategory === null
+                            ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 border-transparent shadow-lg"
+                            : "bg-white/60 dark:bg-white/[0.04] text-neutral-500 border-neutral-200 dark:border-white/8 hover:text-neutral-900 dark:hover:text-white"
+                        }`}
+                >
+                    All
+                </button>
+                {SKILL_CATEGORIES.map((cat) => (
+                    <button
+                        key={cat.label}
+                        onClick={() => setActiveCategory(prev => prev === cat.label ? null : cat.label)}
+                        className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 border
+                            ${activeCategory === cat.label
+                                ? "text-white border-transparent shadow-lg"
+                                : "bg-white/60 dark:bg-white/[0.04] text-neutral-500 border-neutral-200 dark:border-white/8 hover:text-neutral-900 dark:hover:text-white"
+                            }`}
+                        style={activeCategory === cat.label ? {
+                            background: `linear-gradient(135deg, ${cat.color}, ${cat.colorEnd})`,
+                        } : {}}
+                    >
+                        <span style={{ color: activeCategory === cat.label ? "white" : cat.color }}>{cat.icon}</span>
+                        {cat.label}
+                    </button>
+                ))}
+            </div>
+
+            {/* ── Skills grid ─────────────────────────────────────────────── */}
+            <div className="relative w-full max-w-5xl mx-auto">
+                <AnimatePresence mode="popLayout">
+                    <motion.div
+                        key={activeCategory ?? "all"}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.3 }}
+                        className={`grid gap-4 ${
+                            activeCategory
+                                ? "grid-cols-1"
+                                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                        }`}
+                    >
+                        {displayed.map((cat, ci) => (
+                            <motion.div
+                                key={cat.label}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: ci * 0.06, duration: 0.4, ease: "easeOut" }}
+                                className="group relative rounded-2xl border border-neutral-200 dark:border-white/8 bg-white/70 dark:bg-[#0a0a0a] overflow-hidden p-5"
+                            >
+                                {/* Card glow on hover */}
+                                <div
+                                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                                    style={{ background: `radial-gradient(ellipse at top left, ${cat.color}0D 0%, transparent 65%)` }}
+                                />
+                                {/* Top accent bar */}
+                                <div
+                                    className="absolute top-0 left-0 right-0 h-[2px]"
+                                    style={{ background: `linear-gradient(90deg, ${cat.color}, ${cat.colorEnd})` }}
+                                />
+
+                                {/* Category header */}
+                                <div className="flex items-center gap-2.5 mb-4">
+                                    <div
+                                        className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
+                                        style={{ background: `${cat.color}18`, color: cat.color }}
+                                    >
+                                        {cat.icon}
+                                    </div>
+                                    <span
+                                        className="text-xs font-bold tracking-widest uppercase"
+                                        style={{ color: cat.color }}
+                                    >
+                                        {cat.label}
+                                    </span>
+                                </div>
+
+                                {/* Skill pills */}
+                                <div className="flex flex-wrap gap-2">
+                                    {cat.skills.map((skill, si) => (
+                                        <motion.span
+                                            key={skill}
+                                            initial={{ opacity: 0, scale: 0.85 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: ci * 0.06 + si * 0.04, duration: 0.3 }}
+                                            className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 cursor-default hover:scale-105"
+                                            style={{
+                                                color:           cat.color,
+                                                backgroundColor: `${cat.color}10`,
+                                                borderColor:     `${cat.color}28`,
+                                            }}
+                                            whileHover={{
+                                                backgroundColor: `${cat.color}22`,
+                                                borderColor:     `${cat.color}55`,
+                                            }}
+                                        >
+                                            {skill}
+                                        </motion.span>
+                                    ))}
+                                </div>
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+        </motion.div>
     );
 }
 
