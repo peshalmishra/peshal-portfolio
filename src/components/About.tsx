@@ -251,7 +251,7 @@ export function About() {
             {/* ── 1. Sticky cinematic hero ────────────────────────────────── */}
             <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center z-0"
                 style={{ overflowX: "hidden" }}>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_60%)] pointer-events-none rounded-full blur-3xl opacity-60 dark:opacity-100" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.08)_0%,transparent_60%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_0%,transparent_60%)] pointer-events-none rounded-full blur-3xl opacity-60 dark:opacity-100" />
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}

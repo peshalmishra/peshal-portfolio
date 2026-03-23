@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
-import { ArrowUpRight, Search } from "lucide-react";
+import { ArrowUpRight, Search, Trophy, Users, Code, ExternalLink, FileText, Briefcase, ArrowRight } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Data
@@ -347,6 +347,7 @@ export function Blog() {
 
                 {/* ── Competitive Programming & Achievements ───────────────── */}
                 <CompetitiveProgramming />
+                <Achievements />
 
             </div>
         </>
@@ -598,6 +599,222 @@ function CompetitiveProgramming() {
                         </a>
                     </motion.div>
                 ))}
+            </div>
+        </motion.section>
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Achievements & Leadership Timeline
+// ---------------------------------------------------------------------------
+
+const ACHIEVEMENTS = [
+    {
+        type: "hackathon",
+        title: "Code-A-Haunt",
+        result: "2nd runner up 🎯",
+        description: "Selected among top 50 teams at university level. Built an AI-based traffic management system.",
+        tags: ["React", "Node.js", "Machine Learning"],
+        year: "2024",
+        link: "#",
+        certLink: "#",
+        color: "#eab308",
+        bg: "bg-yellow-500/10 dark:bg-yellow-500/20",
+        border: "border-yellow-500/30",
+        glow: "rgba(234,179,8,0.25)",
+        icon: <Trophy className="w-5 h-5 text-yellow-500 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
+    },
+    {
+        type: "club",
+        title: "Microsoft Achievers Club",
+        result: "Tech Lead",
+        description: "Leading technical initiatives and events. Mentoring members in development & DSA. Organizing workshops and coding sessions.",
+        tags: ["Leadership", "Mentoring", "Event Management"],
+        year: "2024–Present",
+        link: "#",
+        certLink: undefined,
+        color: "#a855f7",
+        bg: "bg-purple-500/10 dark:bg-purple-500/20",
+        border: "border-purple-500/30",
+        glow: "rgba(168,85,247,0.25)",
+        icon: <Briefcase className="w-5 h-5 text-purple-500 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-12" />
+    },
+    {
+        type: "event",
+        title: "Hack-fest",
+        result: "Organiser",
+        description: "Successfully organized and managed an intense competitive coding event.",
+        tags: ["Hackathon", "Coding Blocks"],
+        year: "2023",
+        link: "#",
+        certLink: undefined,
+        color: "#3b82f6",
+        bg: "bg-blue-500/10 dark:bg-blue-500/20",
+        border: "border-blue-500/30",
+        glow: "rgba(59,130,246,0.25)",
+        icon: <Code className="w-5 h-5 text-blue-500 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
+    }
+];
+
+function Achievements() {
+    return (
+        <motion.section
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="py-24 px-4 md:px-8 lg:px-12 max-w-[1000px] mx-auto w-full"
+        >
+            {/* Heading */}
+            <div className="text-center mb-16">
+                <p className="text-[11px] tracking-[0.3em] font-medium text-neutral-500 dark:text-neutral-500 uppercase mb-4">
+                    Experience Beyond Code
+                </p>
+                <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-neutral-900 dark:text-white leading-none">
+                    Achievements
+                </h2>
+                <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-none mt-1">
+                    <span
+                        className="font-serif italic"
+                        style={{
+                            background: "linear-gradient(135deg,#a855f7 0%,#3b82f6 50%,#eab308 100%)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor:  "transparent",
+                            backgroundClip:       "text",
+                        }}
+                    >
+                        &amp; Leadership
+                    </span>
+                </h2>
+            </div>
+            
+            {/* Timeline */}
+            <div className="relative">
+                {/* Center Animated Line */}
+                <div 
+                    className="absolute left-[28px] md:left-1/2 top-4 bottom-4 w-[2px] -translate-x-1/2 overflow-hidden rounded-full"
+                    style={{ background: "rgba(255,255,255,0.08)" }}
+                >
+                    <motion.div
+                        className="absolute inset-x-0 w-[2px] h-[40%]"
+                        style={{ background: "linear-gradient(to bottom, transparent, #ff8a00, #8a2be2, transparent)", opacity: 0.8 }}
+                        animate={{ top: ["-40%", "100%"] }}
+                        transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
+                    />
+                </div>
+                
+                {ACHIEVEMENTS.map((ach, i) => {
+                    const isEven = i % 2 === 0;
+                    return (
+                        <motion.div
+                            key={ach.title}
+                            initial={{ opacity: 0, x: isEven ? -50 : 50, y: 20 }}
+                            whileInView={{ opacity: 1, x: 0, y: 0 }}
+                            viewport={{ once: true, margin: "-40px" }}
+                            transition={{ duration: 0.7, delay: i * 0.15, ease: "easeOut" }}
+                            className={`relative flex items-center mb-16 md:mb-20 last:mb-0 stroke-2 group ${isEven ? 'md:flex-row-reverse md:text-right' : 'md:text-left'}`}
+                        >
+                            {/* Empty space on desktop for alternating layout */}
+                            <div className="hidden md:block md:w-5/12" />
+
+                            {/* Center Node / Glowing Badge */}
+                            <div className="absolute left-[28px] md:left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none z-10 w-12 h-12">
+                                {/* Pulse orbit */}
+                                <div className="absolute inset-0 rounded-full scale-100 opacity-20 transition-all duration-700 group-hover:scale-[1.8] group-hover:opacity-0" style={{ background: ach.color }} />
+                                
+                                <motion.div 
+                                    className={`relative z-10 w-12 h-12 rounded-full border border-white/10 ${ach.bg} backdrop-blur-md flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:border-white/20`}
+                                    style={{ boxShadow: `0 0 0 0 ${ach.glow}` }}
+                                    whileHover={{ boxShadow: `0 0 35px ${ach.glow}, inset 0 0 15px ${ach.glow}` }}
+                                >
+                                    {ach.icon}
+                                </motion.div>
+                            </div>
+
+                            {/* Card Content */}
+                            <div className={`w-full pl-[76px] md:pl-0 md:w-5/12 ${isEven ? 'md:pr-10' : 'md:pl-10'}`}>
+                                <style dangerouslySetInnerHTML={{ __html: `
+                                    .ach-card-${i}:hover {
+                                        transform: translateY(-8px) scale(1.02);
+                                        box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 40px ${ach.glow};
+                                    }
+                                `}} />
+                                <div 
+                                    className={`ach-card-${i} p-6 md:p-8 rounded-2xl border bg-white/60 dark:bg-white/5 backdrop-blur-md transition-all duration-300 ${ach.border} hover:bg-white/90 dark:hover:bg-white/10`}
+                                >
+                                    <div className={`flex flex-col-reverse sm:flex-row sm:items-center justify-between mb-4 gap-2 ${isEven ? 'md:flex-row md:items-start' : ''}`}>
+                                        <h3 className="text-xl md:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white group-hover:text-black dark:group-hover:text-white transition-colors">
+                                            {ach.title}
+                                        </h3>
+                                        <span className="text-xs font-black italic text-neutral-400 dark:text-neutral-500 whitespace-nowrap pt-1">
+                                            {ach.year}
+                                        </span>
+                                    </div>
+                                    
+                                    <div className={`mb-5 flex ${isEven ? 'md:justify-end' : 'justify-start'}`}>
+                                        <span 
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black tracking-wide"
+                                            style={{ color: ach.color, backgroundColor: `${ach.color}15`, border: `1px solid ${ach.color}30` }}
+                                        >
+                                            <span className="w-1.5 h-1.5 rounded-full" style={{ background: ach.color }} />
+                                            {ach.result}
+                                        </span>
+                                    </div>
+
+                                    <p className="text-[13px] md:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6 whitespace-pre-line">
+                                        {ach.description}
+                                    </p>
+
+                                    {/* Tech Tags */}
+                                    <div className={`flex flex-wrap gap-2 mb-6 ${isEven ? 'md:justify-end' : 'justify-start'}`}>
+                                        {ach.tags.map((tag) => (
+                                            <span 
+                                                key={tag} 
+                                                className="px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wide border transition-all duration-300 group-hover:bg-white/10"
+                                                style={{ 
+                                                    color: ach.color, 
+                                                    backgroundColor: `${ach.color}10`, 
+                                                    borderColor: `${ach.color}25` 
+                                                }}
+                                            >
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div className={`flex flex-wrap gap-4 pt-1 ${isEven ? 'md:justify-end' : 'justify-start'}`}>
+                                        {ach.link && (
+                                            <a 
+                                                href={ach.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-1.5 text-xs font-bold transition-all hover:opacity-80 group/link"
+                                                style={{ color: ach.color }}
+                                            >
+                                                <ExternalLink className="w-3.5 h-3.5 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 transition-transform" />
+                                                View Project
+                                                <ArrowRight className="w-3.5 h-3.5 opacity-0 -ml-3 group-hover/link:opacity-100 group-hover/link:ml-0 transition-all duration-300" />
+                                            </a>
+                                        )}
+                                        {ach.certLink && (
+                                            <a 
+                                                href={ach.certLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-all group/cert"
+                                            >
+                                                <FileText className="w-3.5 h-3.5 group-hover/cert:-translate-y-0.5 group-hover/cert:translate-x-0.5 transition-transform" />
+                                                See Certificate
+                                                <ArrowRight className="w-3.5 h-3.5 opacity-0 -ml-3 group-hover/cert:opacity-100 group-hover/cert:ml-0 transition-all duration-300" />
+                                            </a>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    );
+                })}
             </div>
         </motion.section>
     );
