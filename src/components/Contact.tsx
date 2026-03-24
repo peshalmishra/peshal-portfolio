@@ -85,7 +85,7 @@ export function Contact() {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all font-light"
-                  placeholder="Jane Doe"
+                  placeholder="Your Name"
                 />
               </div>
               <div className="space-y-2">
@@ -97,7 +97,7 @@ export function Contact() {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all font-light"
-                  placeholder="jane@example.com"
+                  placeholder="abcd@example.com"
                 />
               </div>
             </div>
