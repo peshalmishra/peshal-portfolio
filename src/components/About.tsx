@@ -19,8 +19,8 @@ interface SocialLinkProps {
 
 const PHOTOS = [
     { src: "/peshal-1.jpg", alt: "Peshal Mishra in formal wear", rotate: -6 },
-    { src: "/peshal-2.jpg", alt: "Peshal Mishra casual",         rotate:  4 },
-    { src: "/peshal-3.jpg", alt: "Peshal Mishra in black suit",  rotate: -3 },
+    { src: "/peshal-2.jpg", alt: "Peshal Mishra casual", rotate: 4 },
+    { src: "/peshal-3.jpg", alt: "Peshal Mishra in black suit", rotate: -3 },
 ];
 
 function PhotoStack() {
@@ -44,46 +44,50 @@ function PhotoStack() {
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
-        <div className="relative w-[280px] md:w-[320px] h-[400px] md:h-[460px] select-none">
+        <div className="relative w-[320px] md:w-[360px] lg:w-[400px] h-[460px] md:h-[520px] lg:h-[560px] select-none group">
+            <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-orange-400/20 dark:from-pink-500/10 dark:to-orange-400/10 blur-[50px] rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
             {order.map((photoIndex, stackPosition) => {
-                const photo  = PHOTOS[photoIndex];
-                const total  = order.length;
-                const isTop  = stackPosition === total - 1;
-                const isMid  = stackPosition === total - 2;
+                const photo = PHOTOS[photoIndex];
+                const total = order.length;
+                const isTop = stackPosition === total - 1;
+                const isMid = stackPosition === total - 2;
 
-                const rotate     = isTop ?  3  : isMid ? -5 :  7;
-                const translateX = isTop ? -8  : isMid ?  8 : -4;
-                const translateY = isTop ? -8  : isMid ?  6 :  14;
-                const scale      = isTop ?  1  : isMid ? 0.96 : 0.92;
-                const zIndex     = stackPosition + 1;
+                const rotate = isTop ? 3 : isMid ? -5 : 7;
+                const translateX = isTop ? -8 : isMid ? 8 : -4;
+                const translateY = isTop ? -8 : isMid ? 6 : 14;
+                const scale = isTop ? 1 : isMid ? 0.96 : 0.92;
+                const zIndex = stackPosition + 1;
 
                 return (
                     <motion.div
                         key={photoIndex}
-                        className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10"
+                        className={`absolute inset-0 rounded-[24px] p-[1px] ${isTop ? "bg-gradient-to-br from-neutral-200 to-transparent dark:from-white/30 dark:to-white/5" : "bg-neutral-200/50 dark:bg-white/10"
+                            }`}
                         style={{ zIndex }}
                         animate={{
                             rotate, x: translateX, y: translateY, scale,
                             boxShadow: isTop
-                                ? "0 25px 60px rgba(0,0,0,0.45)"
+                                ? "0 25px 60px rgba(0,0,0,0.15)"
                                 : isMid
-                                ? "0 12px 35px rgba(0,0,0,0.30)"
-                                : "0 6px 20px rgba(0,0,0,0.20)",
+                                    ? "0 12px 35px rgba(0,0,0,0.10)"
+                                    : "0 6px 20px rgba(0,0,0,0.05)",
                         }}
                         transition={{ type: "spring", stiffness: 260, damping: 22, mass: 1 }}
                     >
-                        <img src={photo.src} alt={photo.alt}
-                            className="w-full h-full object-cover object-top pointer-events-none"
-                            draggable={false} />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent pointer-events-none" />
-                        {!isTop && (
-                            <div className="absolute inset-0 pointer-events-none"
-                                style={{ background: `rgba(0,0,0,${isMid ? 0.15 : 0.30})` }} />
-                        )}
+                        <div className="absolute inset-[1px] rounded-[23px] overflow-hidden bg-neutral-100 dark:bg-[#050505]">
+                            <img src={photo.src} alt={photo.alt}
+                                className="w-full h-full object-cover object-top pointer-events-none"
+                                draggable={false} />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none dark:from-black/40" />
+                            {!isTop && (
+                                <div className="absolute inset-0 pointer-events-none"
+                                    style={{ background: `rgba(0,0,0,${isMid ? 0.15 : 0.30})` }} />
+                            )}
+                        </div>
                     </motion.div>
                 );
             })}
@@ -161,14 +165,12 @@ function TimelineItem({ date, company, role, location, type, highlights, skills,
             </div>
 
             <div className="md:col-span-2 space-y-8 min-w-0">
-                <h4 className={`text-3xl font-bold tracking-tight transition-colors duration-500 ${
-                    dimmed ? "text-neutral-500 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-white" : "text-black dark:text-white"
-                }`}>
+                <h4 className={`text-3xl font-bold tracking-tight transition-colors duration-500 ${dimmed ? "text-neutral-500 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-white" : "text-black dark:text-white"
+                    }`}>
                     {role}
                 </h4>
-                <div className={`space-y-6 text-base tracking-wide leading-relaxed font-light transition-colors duration-500 ${
-                    dimmed ? "text-neutral-500 group-hover:text-neutral-700 dark:group-hover:text-neutral-400" : "text-neutral-600 dark:text-neutral-400"
-                }`}>
+                <div className={`space-y-6 text-base tracking-wide leading-relaxed font-light transition-colors duration-500 ${dimmed ? "text-neutral-500 group-hover:text-neutral-700 dark:group-hover:text-neutral-400" : "text-neutral-600 dark:text-neutral-400"
+                    }`}>
                     {highlights.map((h, i) => <p key={i}>{h}</p>)}
                 </div>
                 <div className={`flex flex-wrap gap-3 pt-4 transition-opacity duration-500 ${dimmed ? "opacity-60 group-hover:opacity-100" : ""}`}>
@@ -240,10 +242,10 @@ export function About() {
         offset: ["start center", "end center"],
     });
 
-    const rawProgress    = useTransform(scrollYProgress, [0, 1], [0, 100]);
+    const rawProgress = useTransform(scrollYProgress, [0, 1], [0, 100]);
     const smoothProgress = useSpring(rawProgress, { stiffness: 60, damping: 20 });
-    const timelineTop    = useTransform(smoothProgress, (v) => `${v}%`);
-    const fillHeight     = useTransform(smoothProgress, (v) => `${v}%`);
+    const timelineTop = useTransform(smoothProgress, (v) => `${v}%`);
+    const fillHeight = useTransform(smoothProgress, (v) => `${v}%`);
 
     return (
         <div className="relative min-h-screen">
@@ -281,26 +283,53 @@ export function About() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="flex-1 max-w-2xl space-y-10"
+                    className="flex-1 max-w-[600px] space-y-12 lg:space-y-16"
                 >
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                         <p className="text-xs font-bold tracking-[0.2em] text-neutral-400 uppercase">A little about me</p>
-                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                        <h2 className="text-5xl md:text-[64px] font-black tracking-tight leading-[1.1]">
                             Nice to meet you. I&apos;m{" "}
-                            <span className="bg-gradient-to-r from-pink-500 to-orange-400 bg-clip-text text-transparent font-serif italic pr-2">
-                                Peshal Mishra
+                            <span className="relative inline-block whitespace-nowrap">
+                                <span className="bg-gradient-to-r from-[#ff4d8d] to-[#ff7a45] bg-clip-text text-transparent font-serif italic pr-2 drop-shadow-[0_0_15px_rgba(255,77,141,0.4)]">
+                                    Peshal Mishra
+                                </span>
                             </span>
                         </h2>
+                        <h3 className="text-[20px] md:text-[22px] font-medium text-black/80 dark:text-white/80 mt-2 leading-[1.6]">
+                            I build scalable <strong className="text-black dark:text-white font-bold">systems</strong>, not just interfaces.
+                        </h3>
                     </div>
-                    <div className="space-y-6 text-base md:text-lg text-neutral-400 leading-relaxed font-light">
-                        <p>I transform complex ideas into high-speed, scalable web products. As an engineering-driven developer, I focus on the entire stack — prioritizing clean architecture, seamless performance, and modern solutions that drive real value.</p>
-                        <p>Beyond writing code, I understand the product lifecycle. From architecting initial cloud infrastructure to deploying robust microservices, I&apos;ve learned firsthand how to build, ship, and scale meaningful applications in a fast-paced environment.</p>
-                        <p>My philosophy is simple: build things that last. I help startups and businesses bridge the gap between concept and reality with code that performs.</p>
+                    <div className="space-y-8 text-[16px] md:text-[18px] text-black/75 dark:text-white/75 leading-[1.8] font-light">
+                        <motion.p
+                            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.6 }}
+                        >
+                            I started out building simple interfaces — focusing on how things look and feel. But over time, I became more curious about what happens behind the scenes.
+                        </motion.p>
+                        <motion.p
+                            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3, duration: 0.6 }}
+                        >
+                            That curiosity pushed me deeper into development — understanding how <strong className="font-semibold text-black dark:text-white">systems</strong> communicate, how data flows, and how applications handle real-world <strong className="font-semibold text-black dark:text-white">scale</strong>. What began as writing code gradually turned into designing <strong className="font-semibold text-black dark:text-white">systems</strong>.
+                        </motion.p>
+                        <motion.p
+                            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.4, duration: 0.6 }}
+                        >
+                            Today, I approach every project with an <strong className="font-semibold text-black dark:text-white">architectural</strong> mindset. I think about <strong className="font-semibold text-black dark:text-white">performance</strong>, <strong className="font-semibold text-black dark:text-white">scalability</strong>, and reliability from the start — not as afterthoughts. Whether it&apos;s structuring a frontend or building backend logic, I focus on creating solutions that are clean, efficient, and built to last.
+                        </motion.p>
+                        <motion.p
+                            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5, duration: 0.6 }}
+                        >
+                            Currently, I&apos;m exploring cloud <strong className="font-semibold text-black dark:text-white">architecture</strong> and distributed <strong className="font-semibold text-black dark:text-white">systems</strong> — learning how to design applications that can handle growth, adapt to change, and perform under pressure.
+                        </motion.p>
+                        <motion.p
+                            initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.6, duration: 0.6 }}
+                        >
+                            For me, development isn&apos;t just about making things work — it&apos;s about building <strong className="font-semibold text-black dark:text-white">systems</strong> that continue to work, no matter how far they <strong className="font-semibold text-black dark:text-white">scale</strong>.
+                        </motion.p>
                     </div>
                     <div className="pt-4 flex items-center gap-6">
                         <SocialLink href="https://linkedin.com/in/peshalmishra" label="LinkedIn">LinkedIn</SocialLink>
-                        <SocialLink href="https://github.com/peshalmishra"      label="GitHub">GitHub</SocialLink>
-                        <SocialLink href="https://twitter.com/peshalmishra"     label="Twitter / X">Twitter</SocialLink>
+                        <SocialLink href="https://github.com/peshalmishra" label="GitHub">GitHub</SocialLink>
+                        <SocialLink href="https://twitter.com/peshalmishra" label="Twitter / X">Twitter</SocialLink>
                     </div>
                     <button className="mt-8 flex items-center gap-2 text-sm font-medium text-black dark:text-white hover:text-neutral-500 dark:hover:text-neutral-300 transition-colors group">
                         Dive in deeper
@@ -317,7 +346,7 @@ export function About() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                    className="flex-1 w-full relative min-h-[500px] flex items-center justify-center lg:justify-end pr-0 lg:pr-12"
+                    className="flex-1 w-full relative min-h-[500px] flex items-start justify-center lg:justify-end pr-0 lg:pr-12 lg:pt-8"
                 >
                     <PhotoStack />
                 </motion.div>
@@ -369,7 +398,7 @@ export function About() {
                             <>Containerised and deployed applications with <strong className="font-semibold text-black dark:text-neutral-200">Docker and Kubernetes</strong>, implementing CI/CD pipelines via GitHub Actions for zero-downtime releases.</>,
                             <>Maintained direct client relationships — translating business requirements into technical specs, providing weekly progress updates, and iterating rapidly on feedback.</>,
                         ]}
-                        skills={["Next.js","Node.js","Spring Boot","Go","AWS","Docker","Kubernetes","Terraform","PostgreSQL","Redis","Tailwind CSS","GitHub Actions"]}
+                        skills={["Next.js", "Node.js", "Spring Boot", "Go", "AWS", "Docker", "Kubernetes", "Terraform", "PostgreSQL", "Redis", "Tailwind CSS", "GitHub Actions"]}
                     />
 
                     <TimelineItem
@@ -385,7 +414,7 @@ export function About() {
                             <>Explored <strong className="font-semibold text-black dark:text-neutral-300">containerization using Docker</strong> — building, tagging, and running containers, managing images, and understanding how containers compare to traditional VMs.</>,
                             <>Set up and experimented with basic <strong className="font-semibold text-black dark:text-neutral-300">CI/CD workflows</strong>, automating build and deployment pipelines to understand how modern software delivery works end-to-end.</>,
                         ]}
-                        skills={["AWS","EC2","S3","Docker","CI/CD","GitHub Actions","Linux","Networking","Virtualization"]}
+                        skills={["AWS", "EC2", "S3", "Docker", "CI/CD", "GitHub Actions", "Linux", "Networking", "Virtualization"]}
                     />
                 </div>
             </section>
@@ -413,7 +442,7 @@ export function About() {
                 <div className="relative max-w-6xl mx-auto">
                     <EducationItem index={0} year="2023 – 2027" degree="BTech – Computer Science Engineering" school="Graduation" status="Pursuing" gradient="linear-gradient(to right, #10b981, #06b6d4)" />
                     <EducationItem index={1} year="2022" degree="12th Grade" school="Saint Francis School, Deoghar" status="Completed" gradient="linear-gradient(to right, #3b82f6, #6366f1)" />
-                    <EducationItem index={2} year="2020" degree="10th Grade"  school="Saint Francis School, Deoghar" status="Completed" gradient="linear-gradient(to right, #8b5cf6, #ec4899)" />
+                    <EducationItem index={2} year="2020" degree="10th Grade" school="Saint Francis School, Deoghar" status="Completed" gradient="linear-gradient(to right, #8b5cf6, #ec4899)" />
                 </div>
             </section>
 
@@ -433,10 +462,10 @@ export function About() {
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                         {[
-                            { emoji:"🚀", title:"Technology & Innovation", body:"Love building apps and exploring emerging frameworks — always chasing what's next in the tech ecosystem.", color:"from-blue-500/10 to-indigo-500/5", border:"border-blue-500/20 hover:border-blue-500/40" },
-                            { emoji:"🧩", title:"Problem-Solving",          body:"Enjoy tackling algorithms, competitive coding, and optimizing systems until they're as efficient as they can be.", color:"from-purple-500/10 to-pink-500/5", border:"border-purple-500/20 hover:border-purple-500/40" },
-                            { emoji:"📚", title:"Continuous Learning",      body:"Passionate about courses, tutorials, and contributing to open-source. The day I stop learning is a day wasted.", color:"from-emerald-500/10 to-teal-500/5", border:"border-emerald-500/20 hover:border-emerald-500/40" },
-                            { emoji:"🎨", title:"Hobbies",                  body:"Reading tech blogs, experimenting with new tools, or designing small side projects just for the joy of building.", color:"from-orange-500/10 to-yellow-500/5", border:"border-orange-500/20 hover:border-orange-500/40" },
+                            { emoji: "🚀", title: "Technology & Innovation", body: "Love building apps and exploring emerging frameworks — always chasing what's next in the tech ecosystem.", color: "from-blue-500/10 to-indigo-500/5", border: "border-blue-500/20 hover:border-blue-500/40" },
+                            { emoji: "🧩", title: "Problem-Solving", body: "Enjoy tackling algorithms, competitive coding, and optimizing systems until they're as efficient as they can be.", color: "from-purple-500/10 to-pink-500/5", border: "border-purple-500/20 hover:border-purple-500/40" },
+                            { emoji: "📚", title: "Continuous Learning", body: "Passionate about courses, tutorials, and contributing to open-source. The day I stop learning is a day wasted.", color: "from-emerald-500/10 to-teal-500/5", border: "border-emerald-500/20 hover:border-emerald-500/40" },
+                            { emoji: "🎨", title: "Hobbies", body: "Reading tech blogs, experimenting with new tools, or designing small side projects just for the joy of building.", color: "from-orange-500/10 to-yellow-500/5", border: "border-orange-500/20 hover:border-orange-500/40" },
                         ].map((item, i) => (
                             <motion.div key={item.title}
                                 initial={{ opacity: 0, y: 20 }}
@@ -470,9 +499,9 @@ export function About() {
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {[
-                            { badge:"SHORT-TERM", badgeColor:"bg-blue-500/15 text-blue-500 border-blue-500/25",   cardClass:"border-neutral-200 dark:border-white/8 bg-white/60 dark:bg-white/3", title:"Deepen the Craft",  body:"Gain deeper expertise in full-stack development and cloud computing, and contribute to impactful real-world projects that challenge my skills." },
-                            { badge:"LONG-TERM",  badgeColor:"bg-indigo-500/15 text-indigo-400 border-indigo-500/25", cardClass:"border-indigo-500/25 bg-gradient-to-br from-indigo-500/10 to-purple-500/5", title:"Cloud Architect", body:"Become a cloud architect or senior software engineer designing scalable, efficient distributed systems at enterprise scale." },
-                            { badge:"MISSION",    badgeColor:"bg-purple-500/15 text-purple-400 border-purple-500/25", cardClass:"border-neutral-200 dark:border-white/8 bg-white/60 dark:bg-white/3", title:"Real Impact",      body:"Focused on creating solutions that genuinely improve user experience and solve real-world problems — not just writing code, but building things that matter." },
+                            { badge: "SHORT-TERM", badgeColor: "bg-blue-500/15 text-blue-500 border-blue-500/25", cardClass: "border-neutral-200 dark:border-white/8 bg-white/60 dark:bg-white/3", title: "Deepen the Craft", body: "Gain deeper expertise in full-stack development and cloud computing, and contribute to impactful real-world projects that challenge my skills." },
+                            { badge: "LONG-TERM", badgeColor: "bg-indigo-500/15 text-indigo-400 border-indigo-500/25", cardClass: "border-indigo-500/25 bg-gradient-to-br from-indigo-500/10 to-purple-500/5", title: "Cloud Architect", body: "Become a cloud architect or senior software engineer designing scalable, efficient distributed systems at enterprise scale." },
+                            { badge: "MISSION", badgeColor: "bg-purple-500/15 text-purple-400 border-purple-500/25", cardClass: "border-neutral-200 dark:border-white/8 bg-white/60 dark:bg-white/3", title: "Real Impact", body: "Focused on creating solutions that genuinely improve user experience and solve real-world problems — not just writing code, but building things that matter." },
                         ].map((card, i) => (
                             <motion.div key={card.badge}
                                 initial={{ opacity: 0, y: 20 }}
@@ -508,10 +537,10 @@ export function About() {
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         {[
-                            { icon:"🤝", title:"Teamwork & Collaboration",            tag:"People",  body:"Works effectively in teams, contributing ideas and supporting peers — believes the best products are built together." },
-                            { icon:"💡", title:"Problem-Solving & Critical Thinking", tag:"Mindset", body:"Approaches challenges logically, breaks them into solvable parts, and implements efficient solutions without over-engineering." },
-                            { icon:"⚡", title:"Adaptability",                        tag:"Growth",  body:"Quick learner of new tools, languages, and concepts — thrives in fast-moving environments and embraces change as opportunity." },
-                            { icon:"🗣️", title:"Communication",                       tag:"Clarity", body:"Clearly articulates technical ideas to both teammates and non-technical stakeholders — bridges the gap between code and business." },
+                            { icon: "🤝", title: "Teamwork & Collaboration", tag: "People", body: "Works effectively in teams, contributing ideas and supporting peers — believes the best products are built together." },
+                            { icon: "💡", title: "Problem-Solving & Critical Thinking", tag: "Mindset", body: "Approaches challenges logically, breaks them into solvable parts, and implements efficient solutions without over-engineering." },
+                            { icon: "⚡", title: "Adaptability", tag: "Growth", body: "Quick learner of new tools, languages, and concepts — thrives in fast-moving environments and embraces change as opportunity." },
+                            { icon: "🗣️", title: "Communication", tag: "Clarity", body: "Clearly articulates technical ideas to both teammates and non-technical stakeholders — bridges the gap between code and business." },
                         ].map((skill, i) => (
                             <motion.div key={skill.title}
                                 initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
