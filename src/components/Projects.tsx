@@ -12,6 +12,19 @@ import { ExternalLink, Github, ChevronLeft, ChevronRight, Star, GitFork, Zap } f
 // ---------------------------------------------------------------------------
 const projects = [
     {
+        title: "INVENTREE – AI-Powered IMS",
+        description: "A full-stack MERN inventory management system with AI-powered product content generation (descriptions, tags, captions, pricing) via Google Gemini, JWT auth, analytics dashboard, and Docker/Kubernetes deployment support.",
+        highlight: "AI content generation via Gemini 🤖",
+        tech: ["React", "Node.js", "MongoDB", "Express", "Gemini AI", "Docker"],
+        github: "https://github.com/peshalmishra/inventree",
+        live: "https://inventree-eta.vercel.app/",
+        stars: 12,
+        forks: 3,
+        accent: "#22c55e",
+        image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80&auto=format&fit=crop",
+        imageAlt: "Inventory management dashboard with product analytics",
+    },
+    {
         title: "Cloud-Native E-Commerce Platform",
         description: "A highly resilient microservices architecture handling large-scale traffic, built with Spring Boot, Kafka, and Kubernetes.",
         highlight: "Handles 50K+ req/s under load 🚀",
