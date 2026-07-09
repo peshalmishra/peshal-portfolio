@@ -382,31 +382,125 @@ export function Skills() {
                 </div>
 
                 <div className="h-16" />
+            </div>
 
-                {/* ── Where to next ─────────────────────────────────────── */}
-                <div className="relative z-10 w-full pt-8 pb-20 px-0">
+            {/* ── Where to Next — Navigator Section ───────────────────────── */}
+            <div className="relative w-full overflow-hidden py-24 px-4 sm:px-6">
 
-                    {/* Section label */}
-                    <p className="text-[11px] tracking-[0.3em] font-medium text-neutral-400 dark:text-white/35 uppercase mb-5 text-center">
-                        Explore
-                    </p>
+                {/* ── Navigator background decoration ── */}
 
-                    {/* Heading — same style as "The Magic Behind" */}
-                    <h2 className="text-center text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-neutral-900 dark:text-white mb-12 px-6 w-full">
+                {/* Dot grid */}
+                <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                        backgroundImage: "radial-gradient(circle, rgba(120,120,120,0.13) 1px, transparent 1px)",
+                        backgroundSize: "32px 32px",
+                    }}
+                />
+
+                {/* Compass crosshair SVG — centered, slowly rotates */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
+                    style={{ width: "min(700px,90vw)", height: "min(700px,90vw)", opacity: 0.18 }}>
+                    <svg viewBox="0 0 500 500" className="w-full h-full" style={{ animation: "nav-spin 60s linear infinite" }}>
+                        <defs>
+                            <style>{`@keyframes nav-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+                        </defs>
+                        {/* Outer ring with ticks */}
+                        <circle cx="250" cy="250" r="240" fill="none" stroke="currentColor" strokeWidth="0.8" />
+                        {Array.from({ length: 72 }, (_, i) => {
+                            const a = (i / 72) * Math.PI * 2;
+                            const isMaj = i % 18 === 0, isMed = i % 6 === 0;
+                            const r0 = 240, len = isMaj ? 20 : isMed ? 12 : 6;
+                            const x1 = 250 + Math.cos(a) * r0, y1 = 250 + Math.sin(a) * r0;
+                            const x2 = 250 + Math.cos(a) * (r0 - len), y2 = 250 + Math.sin(a) * (r0 - len);
+                            return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="currentColor" strokeWidth={isMaj ? 1.5 : isMed ? 1 : 0.5} />;
+                        })}
+                        {/* Middle ring */}
+                        <circle cx="250" cy="250" r="180" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 8" />
+                        {/* Inner ring */}
+                        <circle cx="250" cy="250" r="100" fill="none" stroke="currentColor" strokeWidth="0.8" />
+                        {/* Crosshair lines */}
+                        <line x1="250" y1="10" x2="250" y2="148" stroke="currentColor" strokeWidth="1" />
+                        <line x1="250" y1="352" x2="250" y2="490" stroke="currentColor" strokeWidth="1" />
+                        <line x1="10" y1="250" x2="148" y2="250" stroke="currentColor" strokeWidth="1" />
+                        <line x1="352" y1="250" x2="490" y2="250" stroke="currentColor" strokeWidth="1" />
+                        {/* Diagonal lines */}
+                        <line x1="250" y1="250" x2="420" y2="80" stroke="currentColor" strokeWidth="0.4" strokeDasharray="3 6" />
+                        <line x1="250" y1="250" x2="80" y2="420" stroke="currentColor" strokeWidth="0.4" strokeDasharray="3 6" />
+                        <line x1="250" y1="250" x2="80" y2="80" stroke="currentColor" strokeWidth="0.4" strokeDasharray="3 6" />
+                        <line x1="250" y1="250" x2="420" y2="420" stroke="currentColor" strokeWidth="0.4" strokeDasharray="3 6" />
+                        {/* Center dot */}
+                        <circle cx="250" cy="250" r="6" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                        <circle cx="250" cy="250" r="2" fill="currentColor" />
+                        {/* Cardinal labels */}
+                        {[["N","250","26"],["S","250","482"],["E","480","255"],["W","22","255"]].map(([l,x,y]) => (
+                            <text key={l} x={x} y={y} textAnchor="middle" dominantBaseline="central"
+                                fontSize="11" fontFamily="monospace" letterSpacing="0.1em" fill="currentColor">{l}</text>
+                        ))}
+                    </svg>
+                </div>
+
+                {/* Corner frame brackets */}
+                {[
+                    "top-6 left-6 border-t border-l",
+                    "top-6 right-6 border-t border-r",
+                    "bottom-6 left-6 border-b border-l",
+                    "bottom-6 right-6 border-b border-r",
+                ].map((cls, i) => (
+                    <div key={i} className={`absolute w-8 h-8 ${cls} border-neutral-300 dark:border-white/20 pointer-events-none`} />
+                ))}
+
+                {/* Coordinate labels */}
+                <div className="absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-6 pointer-events-none">
+                    {[["LAT", "28.6139° N"], ["LON", "77.2090° E"], ["ALT", "216m"]].map(([k, v]) => (
+                        <div key={k} className="flex items-center gap-1.5 opacity-30 dark:opacity-20">
+                            <span className="text-[9px] font-mono font-bold tracking-widest text-neutral-600 dark:text-neutral-300 uppercase">{k}</span>
+                            <span className="text-[9px] font-mono text-neutral-500 dark:text-neutral-400">{v}</span>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Pulsing center glow */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full pointer-events-none"
+                    style={{ background: "radial-gradient(circle, rgba(168,85,247,0.07) 0%, transparent 70%)", animation: "nav-pulse 4s ease-in-out infinite" }} />
+                <style>{`@keyframes nav-pulse { 0%,100%{opacity:0.4;transform:translate(-50%,-50%) scale(1)} 50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)} }`}</style>
+
+                {/* ── Content ── */}
+                <div className="relative z-10 flex flex-col items-center">
+
+                    {/* Label with navigator pip */}
+                    <div className="flex items-center gap-3 mb-5">
+                        <div className="flex items-center gap-1">
+                            <span className="w-1 h-1 rounded-full bg-neutral-400 dark:bg-white/30" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-500 dark:bg-white/50" />
+                            <span className="w-1 h-1 rounded-full bg-neutral-400 dark:bg-white/30" />
+                        </div>
+                        <p className="text-[11px] tracking-[0.35em] font-bold text-neutral-400 dark:text-white/35 uppercase font-mono">
+                            Navigate
+                        </p>
+                        <div className="flex items-center gap-1">
+                            <span className="w-1 h-1 rounded-full bg-neutral-400 dark:bg-white/30" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-500 dark:bg-white/50" />
+                            <span className="w-1 h-1 rounded-full bg-neutral-400 dark:bg-white/30" />
+                        </div>
+                    </div>
+
+                    {/* Heading */}
+                    <h2 className="text-center text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-neutral-900 dark:text-white mb-3">
                         Where to{" "}
-                        <span
-                            className="font-serif italic inline-block"
-                            style={{
-                                background: "linear-gradient(135deg,#a855f7 0%,#ec4899 50%,#f97316 100%)",
-                                WebkitBackgroundClip: "text",
-                                WebkitTextFillColor: "transparent",
-                                backgroundClip: "text",
-                                paddingRight: "0.05em",
-                            }}
-                        >
+                        <span className="font-serif italic" style={{
+                            background: "linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%)",
+                            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                            backgroundClip: "text", paddingRight: "0.05em",
+                        }}>
                             Next?
                         </span>
                     </h2>
+
+                    {/* Sub-label */}
+                    <p className="text-xs font-mono text-neutral-400 dark:text-white/25 tracking-widest mb-14">
+                        — SELECT DESTINATION —
+                    </p>
 
                     {/* Cards */}
                     <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -416,8 +510,7 @@ export function Skills() {
                                 label:   "About",
                                 tagline: "get to know me",
                                 desc:    "The human behind the keyboard — my story, obsessions, and the questionable number of tabs I have open.",
-                                accent:  "from-violet-500/20 to-fuchsia-500/10",
-                                dot:     "bg-violet-400",
+                                color:   "#a78bfa",
                                 num:     "01",
                             },
                             {
@@ -425,8 +518,7 @@ export function Skills() {
                                 label:   "Work",
                                 tagline: "how i spend my spare time",
                                 desc:    "Side projects, passion builds & things I couldn't resist shipping at 2 AM.",
-                                accent:  "from-blue-500/20 to-cyan-500/10",
-                                dot:     "bg-blue-400",
+                                color:   "#60a5fa",
                                 num:     "02",
                             },
                             {
@@ -434,8 +526,7 @@ export function Skills() {
                                 label:   "Blog",
                                 tagline: "thoughts that escaped my head",
                                 desc:    "Unfiltered takes on tech, building stuff, and the occasional existential crisis about semicolons.",
-                                accent:  "from-amber-500/20 to-orange-500/10",
-                                dot:     "bg-amber-400",
+                                color:   "#fbbf24",
                                 num:     "03",
                             },
                             {
@@ -443,8 +534,7 @@ export function Skills() {
                                 label:   "Resume",
                                 tagline: "the official version of me",
                                 desc:    "All the things I've built, learned and broken — neatly formatted so HR doesn't cry.",
-                                accent:  "from-emerald-500/20 to-green-500/10",
-                                dot:     "bg-emerald-400",
+                                color:   "#34d399",
                                 num:     "04",
                             },
                             {
@@ -452,8 +542,7 @@ export function Skills() {
                                 label:   "Contact",
                                 tagline: "say something nice (or don't)",
                                 desc:    "Got an idea, a collab, or just want to say hi? My inbox is always open — and I actually reply.",
-                                accent:  "from-rose-500/20 to-pink-500/10",
-                                dot:     "bg-rose-400",
+                                color:   "#f472b6",
                                 num:     "05",
                             },
                         ].map((card, i) => (
@@ -467,45 +556,55 @@ export function Skills() {
                             >
                                 <Link
                                     href={card.href}
-                                    className="group relative flex flex-col justify-between h-full min-h-[200px] rounded-[1.75rem] border border-neutral-200 dark:border-white/8 bg-white/60 dark:bg-black/40 backdrop-blur-md overflow-hidden p-7 transition-all duration-300 hover:border-neutral-300 dark:hover:border-white/15 hover:shadow-2xl hover:shadow-black/10 dark:hover:shadow-black/40 hover:-translate-y-1.5"
+                                    className="group relative flex flex-col justify-between h-full min-h-[200px] rounded-[1.75rem] border border-neutral-200/80 dark:border-white/8 bg-white/70 dark:bg-[#0a0a0a]/80 backdrop-blur-sm overflow-hidden p-7 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl"
+                                    style={{ ["--card-color" as string]: card.color }}
                                 >
-                                    {/* Gradient wash on hover */}
-                                    <div className={`absolute inset-0 bg-gradient-to-br ${card.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                                    {/* Corner bracket accent */}
+                                    <div className="absolute top-4 right-4 w-5 h-5 border-t border-r opacity-20 group-hover:opacity-60 transition-opacity duration-300"
+                                        style={{ borderColor: card.color }} />
+                                    <div className="absolute bottom-4 left-4 w-5 h-5 border-b border-l opacity-20 group-hover:opacity-60 transition-opacity duration-300"
+                                        style={{ borderColor: card.color }} />
+
+                                    {/* Hover glow */}
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[1.75rem]"
+                                        style={{ background: `radial-gradient(ellipse at 50% 100%, ${card.color}18 0%, transparent 70%)` }} />
 
                                     {/* Top row */}
                                     <div className="relative z-10 flex items-start justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <span className={`w-2 h-2 rounded-full ${card.dot} opacity-60 group-hover:opacity-100 transition-opacity`} />
-                                            <span className="text-[10px] tracking-[0.25em] font-bold text-neutral-400 dark:text-white/30 uppercase group-hover:text-neutral-600 dark:group-hover:text-white/60 transition-colors">
+                                        <div className="flex items-center gap-2.5">
+                                            {/* Coordinate-style number */}
+                                            <span className="text-[9px] font-mono font-bold tracking-widest px-1.5 py-0.5 rounded border opacity-50 group-hover:opacity-90 transition-opacity"
+                                                style={{ color: card.color, borderColor: card.color }}>
+                                                {card.num}
+                                            </span>
+                                            <span className="text-[10px] tracking-[0.2em] font-bold text-neutral-400 dark:text-white/30 uppercase group-hover:text-neutral-600 dark:group-hover:text-white/60 transition-colors">
                                                 {card.tagline}
                                             </span>
                                         </div>
-                                        <div className="w-8 h-8 rounded-full border border-neutral-200 dark:border-white/10 flex items-center justify-center text-neutral-400 dark:text-white/30 group-hover:bg-black dark:group-hover:bg-white group-hover:border-transparent group-hover:text-white dark:group-hover:text-black transition-all duration-300 -rotate-45 group-hover:rotate-0">
-                                            <ArrowUpRight className="w-3.5 h-3.5" />
+                                        <div className="w-8 h-8 rounded-full border border-neutral-300 dark:border-white/15 flex items-center justify-center text-neutral-400 dark:text-white/30 group-hover:border-transparent transition-all duration-300 -rotate-45 group-hover:rotate-0">
+                                            <ArrowUpRight className="w-3.5 h-3.5 group-hover:hidden" />
+                                            <span className="hidden group-hover:block text-[10px] font-mono font-bold"
+                                                style={{ color: card.color }}>GO</span>
                                         </div>
                                     </div>
 
                                     {/* Bottom row */}
                                     <div className="relative z-10 mt-6">
-                                        <div className="flex items-baseline gap-3 mb-2">
-                                            <span className="text-[10px] font-mono text-neutral-300 dark:text-white/15 group-hover:text-neutral-400 dark:group-hover:text-white/30 transition-colors">
-                                                {card.num}
-                                            </span>
-                                            <h3 className="text-3xl sm:text-4xl font-bold tracking-tighter text-neutral-900 dark:text-white">
-                                                {card.label}
-                                            </h3>
-                                        </div>
+                                        <h3 className="text-3xl sm:text-4xl font-bold tracking-tighter text-neutral-900 dark:text-white mb-2">
+                                            {card.label}
+                                        </h3>
                                         <p className="text-xs text-neutral-500 dark:text-white/35 leading-relaxed group-hover:text-neutral-600 dark:group-hover:text-white/55 transition-colors max-w-xs">
                                             {card.desc}
                                         </p>
+                                        {/* Bottom accent bar */}
+                                        <div className="mt-4 w-0 group-hover:w-12 h-0.5 rounded-full transition-all duration-500"
+                                            style={{ background: card.color }} />
                                     </div>
                                 </Link>
                             </motion.div>
                         ))}
                     </div>
                 </div>
-
-            </div>
 
             {/* ── Red banner ─────────────────────────────────────────────── */}
             <RedBanner />
