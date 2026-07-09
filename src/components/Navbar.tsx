@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "./ThemeToggle";
 import { Command } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { CommandMenu } from "./CommandMenu";
 
 const links = [
@@ -69,16 +69,159 @@ function MoreDropdown({ open, onClose }: { open: boolean; onClose: () => void })
 }
 
 // ---------------------------------------------------------------------------
+// NavLinks — self-contained: its own hover state, its own measured pill.
+// Rendered as a real component instance (capitalized, used via JSX) so each
+// of the two nav variants (full / compact) gets independent hover state —
+// they no longer fight over one shared `hoveredPath`.
+// ---------------------------------------------------------------------------
+
+function NavLinks({
+    compact,
+    moreOpen,
+    setMoreOpen,
+    moreRef,
+}: {
+    compact?: boolean;
+    moreOpen: boolean;
+    setMoreOpen: (v: boolean | ((p: boolean) => boolean)) => void;
+    moreRef: React.RefObject<HTMLLIElement>;
+}) {
+    const pathname = usePathname();
+    const [hoveredKey, setHoveredKey] = useState<string | null>(null);
+
+    const containerRef = useRef<HTMLUListElement>(null);
+    const itemRefs = useRef<Map<string, HTMLLIElement>>(new Map());
+    const [pill, setPill] = useState<{ left: number; width: number } | null>(null);
+
+    const isActive = (path: string) => {
+        if (path === "/") return pathname === "/";
+        return pathname === path || pathname.startsWith(path + "/");
+    };
+
+    const activeKey = links.find((l) => isActive(l.path))?.path ?? null;
+    // Whatever is hovered wins; fall back to the active route when nothing is hovered.
+    const currentKey = hoveredKey ?? activeKey;
+
+    // Measure and reposition the single pill whenever the target changes,
+    // whenever we switch compact/full layout, or on resize.
+    useLayoutEffect(() => {
+        const reposition = () => {
+            if (!currentKey) {
+                setPill(null);
+                return;
+            }
+            const el = itemRefs.current.get(currentKey);
+            const container = containerRef.current;
+            if (el && container) {
+                const elRect = el.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                setPill({
+                    left: elRect.left - containerRect.left,
+                    width: elRect.width,
+                });
+            }
+        };
+        reposition();
+        window.addEventListener("resize", reposition);
+        return () => window.removeEventListener("resize", reposition);
+    }, [currentKey, compact]);
+
+    return (
+        <ul
+            ref={containerRef}
+            className="flex items-center relative"
+            onMouseLeave={() => setHoveredKey(null)}
+        >
+            {/* Single persistent pill — slides via left/width, never unmounts */}
+            {pill && (
+                <motion.div
+                    className="absolute top-0 h-full bg-[#111] dark:bg-white rounded-full shadow-sm pointer-events-none"
+                    style={{ zIndex: 0 }}
+                    initial={false}
+                    animate={{ left: pill.left, width: pill.width }}
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                />
+            )}
+
+            {links.map((link) => {
+                const showPill = currentKey === link.path;
+                return (
+                    <li
+                        key={link.name}
+                        ref={(el) => {
+                            if (el) itemRefs.current.set(link.path, el);
+                        }}
+                        className="relative"
+                        onMouseEnter={() => setHoveredKey(link.path)}
+                    >
+                        <Link
+                            href={link.path}
+                            className={`relative z-10 ${compact ? "px-4 py-1.5" : "px-5 py-2"} text-sm font-medium transition-colors duration-300 rounded-full flex items-center justify-center ${
+                                showPill
+                                    ? "text-white dark:text-[#111]"
+                                    : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                            }`}
+                        >
+                            {link.name}
+                        </Link>
+                    </li>
+                );
+            })}
+
+            {/* More */}
+            <li
+                ref={(el) => {
+                    if (el) {
+                        itemRefs.current.set("more", el);
+                        (moreRef as React.MutableRefObject<HTMLLIElement | null>).current = el;
+                    }
+                }}
+                className="relative"
+                onMouseEnter={() => {
+                    setHoveredKey("more");
+                    setMoreOpen(true);
+                }}
+                onMouseLeave={() => setMoreOpen(false)}
+            >
+                <button
+                    onClick={() => setMoreOpen((p) => !p)}
+                    onFocus={() => setMoreOpen(true)}
+                    aria-haspopup="true"
+                    aria-expanded={moreOpen}
+                    className={`relative z-10 ${compact ? "px-4 py-1.5" : "px-5 py-2"} text-sm font-medium transition-all duration-300 rounded-full flex items-center space-x-1 outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 ${
+                        currentKey === "more"
+                            ? "text-white dark:text-[#111]"
+                            : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                    }`}
+                >
+                    <span>More</span>
+                    <motion.svg
+                        width="10"
+                        height="6"
+                        viewBox="0 0 10 6"
+                        fill="none"
+                        animate={{ rotate: moreOpen ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="mt-0.5 opacity-50"
+                    >
+                        <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </motion.svg>
+                </button>
+                <MoreDropdown open={moreOpen} onClose={() => setMoreOpen(false)} />
+            </li>
+        </ul>
+    );
+}
+
+// ---------------------------------------------------------------------------
 // Navbar
 // ---------------------------------------------------------------------------
 
 export function Navbar() {
     const [isCommandOpen, setIsCommandOpen] = useState(false);
     const [isScrolled,    setIsScrolled]    = useState(false);
-    const [hoveredPath,   setHoveredPath]   = useState<string | null>(null);
     const [moreOpen,      setMoreOpen]      = useState(false);
     const moreRef = useRef<HTMLLIElement>(null);
-    const pathname = usePathname();
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -105,75 +248,6 @@ export function Navbar() {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-
-    const isActive = (path: string) => {
-        if (path === "/") return pathname === "/";
-        return pathname === path || pathname.startsWith(path + "/");
-    };
-
-    // Shared nav links list
-    const NavLinks = ({ pillId, compact }: { pillId: string; compact?: boolean }) => (
-        <ul className="flex items-center relative" onMouseLeave={() => setHoveredPath(null)}>
-            {links.map((link) => {
-                const active   = isActive(link.path);
-                const showPill = hoveredPath === link.path || (hoveredPath === null && active);
-                return (
-                    <li key={link.name} className="relative" onMouseEnter={() => setHoveredPath(link.path)}>
-                        <Link href={link.path}
-                            className={`relative ${compact ? "px-4 py-1.5" : "px-5 py-2"} text-sm font-medium transition-colors duration-300 rounded-full flex items-center justify-center z-10 ${
-                                showPill
-                                    ? "text-white dark:text-[#111]"
-                                    : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
-                            }`}
-                        >
-                            {link.name}
-                        </Link>
-                        {showPill && (
-                            <motion.div
-                                layoutId={pillId}
-                                className="absolute inset-0 bg-[#111] dark:bg-white rounded-full shadow-sm -z-10"
-                                transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                            />
-                        )}
-                    </li>
-                );
-            })}
-
-            {/* More */}
-            <li ref={moreRef} className="relative"
-                onMouseEnter={() => { setHoveredPath("more"); setMoreOpen(true); }}
-                onMouseLeave={() => setMoreOpen(false)}
-            >
-                <button
-                    onClick={() => setMoreOpen((p) => !p)}
-                    onFocus={() => setMoreOpen(true)}
-                    aria-haspopup="true"
-                    aria-expanded={moreOpen}
-                    className={`${compact ? "px-4 py-1.5" : "px-5 py-2"} text-sm font-medium transition-all duration-300 rounded-full flex items-center relative z-10 space-x-1 outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 ${
-                        hoveredPath === "more"
-                            ? "text-white dark:text-[#111]"
-                            : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
-                    }`}
-                >
-                    <span>More</span>
-                    <motion.svg width="10" height="6" viewBox="0 0 10 6" fill="none"
-                        animate={{ rotate: moreOpen ? 180 : 0 }} transition={{ duration: 0.2 }}
-                        className="mt-0.5 opacity-50"
-                    >
-                        <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </motion.svg>
-                </button>
-                {hoveredPath === "more" && (
-                    <motion.div
-                        layoutId={pillId}
-                        className="absolute inset-0 bg-[#111] dark:bg-white rounded-full shadow-sm -z-10"
-                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                    />
-                )}
-                <MoreDropdown open={moreOpen} onClose={() => setMoreOpen(false)} />
-            </li>
-        </ul>
-    );
 
     return (
         <>
@@ -211,7 +285,7 @@ export function Navbar() {
                             {/* Right — nav pill + controls */}
                             <div className="flex items-center gap-3">
                                 <nav className="hidden md:flex items-center px-1.5 py-1.5 rounded-full bg-white/90 dark:bg-[#111]/90 backdrop-blur-md border border-neutral-200 dark:border-[#222] shadow-sm">
-                                    <NavLinks pillId="nav-pill-full" />
+                                    <NavLinks moreOpen={moreOpen} setMoreOpen={setMoreOpen} moreRef={moreRef} />
                                 </nav>
 
                                 <div className="flex items-center gap-2">
@@ -250,7 +324,7 @@ export function Navbar() {
 
                             {/* Compact nav */}
                             <nav className="hidden md:flex items-center">
-                                <NavLinks pillId="nav-pill-compact" compact />
+                                <NavLinks compact moreOpen={moreOpen} setMoreOpen={setMoreOpen} moreRef={moreRef} />
                             </nav>
 
                             <div className="w-px h-4 bg-neutral-200 dark:bg-[#333]" />
