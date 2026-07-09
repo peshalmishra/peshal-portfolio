@@ -77,52 +77,96 @@ function useGlobe(config: Required<GlobeConfig>) {
   const globeRef = useRef<GlobeInstance | null>(null);
   const phiRef = useRef(0);
   const widthRef = useRef(0);
+  const initializationAttemptedRef = useRef(false);
 
   const initGlobe = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas || widthRef.current <= 0) return;
+    const parent = canvas?.parentElement;
+    
+    if (!canvas || !parent) {
+      console.warn("[Globe] Canvas or parent not found");
+      return;
+    }
+
+    const width = parent.clientWidth;
+    if (width <= 0) {
+      console.warn("[Globe] Invalid parent width:", width);
+      return;
+    }
+
+    widthRef.current = width;
 
     if (globeRef.current) {
-      globeRef.current.destroy();
+      try {
+        globeRef.current.destroy();
+      } catch (e) {
+        console.warn("[Globe] Error destroying previous globe:", e);
+      }
       globeRef.current = null;
     }
 
-    const dpr = Math.min(window.devicePixelRatio ?? 1, 2);
-    const size = widthRef.current;
+    try {
+      const dpr = Math.min(window.devicePixelRatio ?? 1, 2);
+      const size = width;
 
-    globeRef.current = createGlobe(canvas, {
-      devicePixelRatio: dpr,
-      width: size * dpr,
-      height: size * dpr,
+      globeRef.current = createGlobe(canvas, {
+        devicePixelRatio: dpr,
+        width: size * dpr,
+        height: size * dpr,
 
-      phi: 0,
-      theta: config.theta,
-      dark: config.dark,
-      diffuse: config.diffuse,
+        phi: 0,
+        theta: config.theta,
+        dark: config.dark,
+        diffuse: config.diffuse,
 
-      mapSamples: config.mapSamples,
-      mapBrightness: config.mapBrightness,
+        mapSamples: config.mapSamples,
+        mapBrightness: config.mapBrightness,
 
-      baseColor: config.baseColor,
-      markerColor: config.markerColor,
-      glowColor: config.glowColor,
+        baseColor: config.baseColor,
+        markerColor: config.markerColor,
+        glowColor: config.glowColor,
 
-      markers: config.markers,
+        markers: config.markers,
 
-      onRender: (state) => {
-        state.phi = phiRef.current;
-        phiRef.current += config.rotationSpeed;
-      },
-    });
+        onRender: (state) => {
+          state.phi = phiRef.current;
+          phiRef.current += config.rotationSpeed;
+        },
+      });
+
+      console.debug("[Globe] Initialized successfully");
+    } catch (error) {
+      console.error("[Globe] Failed to initialize:", error);
+    }
   }, [config]);
 
   useEffect(() => {
     const parent = canvasRef.current?.parentElement;
     if (!parent) return;
 
+    // Try initial initialization
+    if (!initializationAttemptedRef.current) {
+      initializationAttemptedRef.current = true;
+      
+      // First attempt: immediate
+      if (parent.clientWidth > 0) {
+        initGlobe();
+      } else {
+        // Second attempt: after DOM is ready
+        const timer = setTimeout(() => {
+          if (parent.clientWidth > 0) {
+            initGlobe();
+          }
+        }, 100);
+        
+        return () => clearTimeout(timer);
+      }
+    }
+
+    // ResizeObserver for responsive updates
     const observer = new ResizeObserver((entries) => {
       const w = entries[0]?.contentRect.width ?? 0;
-      if (w > 0) {
+      if (w > 0 && w !== widthRef.current) {
         widthRef.current = w;
         initGlobe();
       }
@@ -132,7 +176,11 @@ function useGlobe(config: Required<GlobeConfig>) {
 
     return () => {
       if (globeRef.current) {
-        globeRef.current.destroy();
+        try {
+          globeRef.current.destroy();
+        } catch (e) {
+          console.warn("[Globe] Error destroying globe on unmount:", e);
+        }
         globeRef.current = null;
       }
       observer.disconnect();
@@ -144,6 +192,11 @@ function useGlobe(config: Required<GlobeConfig>) {
 
 export function Globe({ config = {}, className = "" }: GlobeProps) {
   const isDark = useTheme();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const baseConfig = isDark ? DARK_CONFIG : LIGHT_CONFIG;
   const mergedConfig: Required<GlobeConfig> = { ...baseConfig, ...config };
@@ -161,6 +214,15 @@ export function Globe({ config = {}, className = "" }: GlobeProps) {
   const glowCore = isDark
     ? "rgba(255,255,255,0.06)"
     : "rgba(0,0,0,0.06)";
+
+  if (!isClient) {
+    return (
+      <div
+        className={`relative w-full aspect-square max-w-[600px] flex items-center justify-center ${className}`}
+        style={{ background: isDark ? "#0a0a0a" : "#f5f5f5" }}
+      />
+    );
+  }
 
   return (
     <div

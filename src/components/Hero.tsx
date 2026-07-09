@@ -6,6 +6,7 @@ import { Clock } from "./Clock";
 import { Globe } from "./Globe";
 import { Github, Linkedin, Twitter, MapPin, Layers } from "lucide-react";
 import { Skills } from "./Skills";
+import { useEffect } from "react";
 
 // ---------------------------------------------------------------------------
 // CLOCK SIZING — single source of truth.
@@ -23,6 +24,7 @@ import { Skills } from "./Skills";
 
 interface HeroProps {
     isLoaded?: boolean;
+    hidePreloader?: boolean;
 }
 
 const FADE_UP = {
@@ -54,8 +56,13 @@ function SocialLink({
     );
 }
 
-export function Hero({ isLoaded = true }: HeroProps) {
-    if (!isLoaded) return null;
+export function Hero({ isLoaded = true, hidePreloader = false }: HeroProps) {
+    // Force scroll to top when page loads
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "instant" });
+    }, []);
+
+    // Always render Hero for better UX and SEO
 
     return (
         <section id="home" className="w-full flex flex-col items-center overflow-x-hidden text-white">
