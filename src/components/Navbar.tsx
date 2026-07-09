@@ -84,7 +84,7 @@ function NavLinks({
     compact?: boolean;
     moreOpen: boolean;
     setMoreOpen: (v: boolean | ((p: boolean) => boolean)) => void;
-    moreRef: React.RefObject<HTMLLIElement>;
+    moreRef: React.RefObject<HTMLLIElement | null>;
 }) {
     const pathname = usePathname();
     const [hoveredKey, setHoveredKey] = useState<string | null>(null);
