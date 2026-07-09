@@ -27,15 +27,15 @@ interface GlobeProps {
 const DARK_CONFIG: Required<GlobeConfig> = {
   markers: [{ location: [20.5937, 78.9629], size: 0.05 }],
 
-  baseColor: [0.18, 0.18, 0.18],
-  markerColor: [0.5, 0.5, 0.5],
-  glowColor: [0.2, 0.2, 0.2],
+  baseColor: [0.08, 0.08, 0.08],
+  markerColor: [0.6, 0.6, 0.6],
+  glowColor: [0.1, 0.1, 0.1],
 
-  mapBrightness: 3,
+  mapBrightness: 0.8,
   mapSamples: 16000,
 
   dark: 1,
-  diffuse: 1.2,
+  diffuse: 0.4,
   theta: 0.3,
   rotationSpeed: 0.003,
 };
@@ -43,15 +43,15 @@ const DARK_CONFIG: Required<GlobeConfig> = {
 const LIGHT_CONFIG: Required<GlobeConfig> = {
   markers: [{ location: [20.5937, 78.9629], size: 0.05 }],
 
-  baseColor: [0.92, 0.92, 0.92],
-  markerColor: [0.4, 0.4, 0.4],
-  glowColor: [0.5, 0.5, 0.5],
+  baseColor: [0.98, 0.98, 0.98],
+  markerColor: [0.3, 0.3, 0.3],
+  glowColor: [0.85, 0.85, 0.85],
 
-  mapBrightness: 2,
+  mapBrightness: 0.6,
   mapSamples: 16000,
 
   dark: 0,
-  diffuse: 1.0,
+  diffuse: 0.3,
   theta: 0.3,
   rotationSpeed: 0.003,
 };
