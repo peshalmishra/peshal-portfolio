@@ -4,9 +4,8 @@ import { motion } from "framer-motion";
 import { ConnectCard } from "./ConnectCard";
 import { Clock } from "./Clock";
 import { Globe } from "./Globe";
-import { Github, Linkedin, Twitter, MapPin, Layers, ArrowUpRight } from "lucide-react";
+import { Github, Linkedin, Twitter, MapPin, Layers } from "lucide-react";
 import { Skills } from "./Skills";
-import Link from "next/link";
 
 // ---------------------------------------------------------------------------
 // CLOCK SIZING — single source of truth.
@@ -490,132 +489,6 @@ export function Hero({ isLoaded = true }: HeroProps) {
             {/* ── Skills section ──────────────────────────────────────────── */}
             <Skills />
 
-            {/* ── Page Navigation Section ─────────────────────────────────── */}
-            <div className="w-full max-w-[1400px] px-4 sm:px-6 md:px-8 pb-32 pt-8">
-
-                {/* Header */}
-                <motion.div
-                    variants={FADE_UP}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={VIEWPORT}
-                    transition={{ duration: 0.7 }}
-                    className="flex items-end justify-between mb-10 md:mb-14"
-                >
-                    <div>
-                        <p className="text-[10px] tracking-[0.3em] font-bold text-neutral-500 dark:text-neutral-500 uppercase mb-3">
-                            Explore
-                        </p>
-                        <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter text-black dark:text-white leading-none">
-                            Where to{" "}
-                            <span className="font-serif italic font-light text-neutral-400">next?</span>
-                        </h2>
-                    </div>
-                    <div className="hidden md:flex items-center gap-2 text-neutral-400">
-                        <div className="w-8 h-px bg-neutral-300 dark:bg-neutral-700" />
-                        <span className="text-xs tracking-widest uppercase font-medium">all pages</span>
-                    </div>
-                </motion.div>
-
-                {/* Cards grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-                    {[
-                        {
-                            href:    "/about",
-                            label:   "About",
-                            tagline: "get to know me",
-                            desc:    "The human behind the keyboard — my story, obsessions, and the questionable number of tabs I have open.",
-                            accent:  "from-violet-500/20 to-fuchsia-500/10",
-                            dot:     "bg-violet-400",
-                            num:     "01",
-                        },
-                        {
-                            href:    "/projects",
-                            label:   "Work",
-                            tagline: "how i spend my spare time",
-                            desc:    "Side projects, passion builds & things I couldn't resist shipping at 2 AM.",
-                            accent:  "from-blue-500/20 to-cyan-500/10",
-                            dot:     "bg-blue-400",
-                            num:     "02",
-                        },
-                        {
-                            href:    "/blog",
-                            label:   "Blog",
-                            tagline: "thoughts that escaped my head",
-                            desc:    "Unfiltered takes on tech, building stuff, and the occasional existential crisis about semicolons.",
-                            accent:  "from-amber-500/20 to-orange-500/10",
-                            dot:     "bg-amber-400",
-                            num:     "03",
-                        },
-                        {
-                            href:    "/resume",
-                            label:   "Resume",
-                            tagline: "the official version of me",
-                            desc:    "All the things I've built, learned and broken — neatly formatted so HR doesn't cry.",
-                            accent:  "from-emerald-500/20 to-green-500/10",
-                            dot:     "bg-emerald-400",
-                            num:     "04",
-                        },
-                        {
-                            href:    "/contact",
-                            label:   "Contact",
-                            tagline: "say something nice (or don't)",
-                            desc:    "Got an idea, a collab, or just want to say hi? My inbox is always open — and I actually reply.",
-                            accent:  "from-rose-500/20 to-pink-500/10",
-                            dot:     "bg-rose-400",
-                            num:     "05",
-                        },
-                    ].map((card, i) => (
-                        <motion.div
-                            key={card.href}
-                            variants={FADE_UP}
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={VIEWPORT}
-                            transition={{ duration: 0.6, delay: i * 0.08 }}
-                            className={i === 4 ? "sm:col-span-2 lg:col-span-1" : ""}
-                        >
-                            <Link
-                                href={card.href}
-                                className="group relative flex flex-col justify-between h-full min-h-[200px] rounded-[1.75rem] border border-neutral-200 dark:border-white/5 bg-white dark:bg-[#0a0a0a] overflow-hidden p-7 transition-all duration-300 hover:border-neutral-300 dark:hover:border-white/10 hover:shadow-2xl hover:shadow-black/10 dark:hover:shadow-black/40 hover:-translate-y-1"
-                            >
-                                {/* Gradient wash */}
-                                <div className={`absolute inset-0 bg-gradient-to-br ${card.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-
-                                {/* Top row */}
-                                <div className="relative z-10 flex items-start justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <span className={`w-2 h-2 rounded-full ${card.dot} opacity-70 group-hover:opacity-100 transition-opacity`} />
-                                        <span className="text-[10px] tracking-[0.25em] font-bold text-neutral-400 dark:text-neutral-500 uppercase group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors">
-                                            {card.tagline}
-                                        </span>
-                                    </div>
-                                    <div className="w-8 h-8 rounded-full border border-neutral-200 dark:border-white/10 flex items-center justify-center text-neutral-400 dark:text-neutral-500 group-hover:bg-black dark:group-hover:bg-white group-hover:border-transparent group-hover:text-white dark:group-hover:text-black transition-all duration-300 -rotate-45 group-hover:rotate-0">
-                                        <ArrowUpRight className="w-3.5 h-3.5" />
-                                    </div>
-                                </div>
-
-                                {/* Bottom row */}
-                                <div className="relative z-10 mt-6">
-                                    <div className="flex items-baseline gap-3 mb-2">
-                                        <span className="text-[10px] font-mono text-neutral-300 dark:text-neutral-700 group-hover:text-neutral-400 dark:group-hover:text-neutral-500 transition-colors">
-                                            {card.num}
-                                        </span>
-                                        <h3 className="text-3xl sm:text-4xl font-bold tracking-tighter text-black dark:text-white">
-                                            {card.label}
-                                        </h3>
-                                    </div>
-                                    <p className="text-xs text-neutral-500 dark:text-neutral-500 leading-relaxed group-hover:text-neutral-600 dark:group-hover:text-neutral-400 transition-colors max-w-xs">
-                                        {card.desc}
-                                    </p>
-                                </div>
-                            </Link>
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
-
         </section>
     );
-}
+}

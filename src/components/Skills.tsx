@@ -2,6 +2,8 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Skill categories
@@ -380,6 +382,129 @@ export function Skills() {
                 </div>
 
                 <div className="h-16" />
+
+                {/* ── Where to next ─────────────────────────────────────── */}
+                <div className="relative z-10 w-full pt-8 pb-20 px-0">
+
+                    {/* Section label */}
+                    <p className="text-[11px] tracking-[0.3em] font-medium text-neutral-400 dark:text-white/35 uppercase mb-5 text-center">
+                        Explore
+                    </p>
+
+                    {/* Heading — same style as "The Magic Behind" */}
+                    <h2 className="text-center text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-neutral-900 dark:text-white mb-12 px-6 w-full">
+                        Where to{" "}
+                        <span
+                            className="font-serif italic inline-block"
+                            style={{
+                                background: "linear-gradient(135deg,#a855f7 0%,#ec4899 50%,#f97316 100%)",
+                                WebkitBackgroundClip: "text",
+                                WebkitTextFillColor: "transparent",
+                                backgroundClip: "text",
+                                paddingRight: "0.05em",
+                            }}
+                        >
+                            Next?
+                        </span>
+                    </h2>
+
+                    {/* Cards */}
+                    <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {[
+                            {
+                                href:    "/about",
+                                label:   "About",
+                                tagline: "get to know me",
+                                desc:    "The human behind the keyboard — my story, obsessions, and the questionable number of tabs I have open.",
+                                accent:  "from-violet-500/20 to-fuchsia-500/10",
+                                dot:     "bg-violet-400",
+                                num:     "01",
+                            },
+                            {
+                                href:    "/projects",
+                                label:   "Work",
+                                tagline: "how i spend my spare time",
+                                desc:    "Side projects, passion builds & things I couldn't resist shipping at 2 AM.",
+                                accent:  "from-blue-500/20 to-cyan-500/10",
+                                dot:     "bg-blue-400",
+                                num:     "02",
+                            },
+                            {
+                                href:    "/blog",
+                                label:   "Blog",
+                                tagline: "thoughts that escaped my head",
+                                desc:    "Unfiltered takes on tech, building stuff, and the occasional existential crisis about semicolons.",
+                                accent:  "from-amber-500/20 to-orange-500/10",
+                                dot:     "bg-amber-400",
+                                num:     "03",
+                            },
+                            {
+                                href:    "/resume",
+                                label:   "Resume",
+                                tagline: "the official version of me",
+                                desc:    "All the things I've built, learned and broken — neatly formatted so HR doesn't cry.",
+                                accent:  "from-emerald-500/20 to-green-500/10",
+                                dot:     "bg-emerald-400",
+                                num:     "04",
+                            },
+                            {
+                                href:    "/contact",
+                                label:   "Contact",
+                                tagline: "say something nice (or don't)",
+                                desc:    "Got an idea, a collab, or just want to say hi? My inbox is always open — and I actually reply.",
+                                accent:  "from-rose-500/20 to-pink-500/10",
+                                dot:     "bg-rose-400",
+                                num:     "05",
+                            },
+                        ].map((card, i) => (
+                            <motion.div
+                                key={card.href}
+                                initial={{ opacity: 0, y: 24 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-60px" }}
+                                transition={{ duration: 0.55, delay: i * 0.08, ease: "easeOut" }}
+                                className={i === 4 ? "sm:col-span-2 lg:col-span-1" : ""}
+                            >
+                                <Link
+                                    href={card.href}
+                                    className="group relative flex flex-col justify-between h-full min-h-[200px] rounded-[1.75rem] border border-neutral-200 dark:border-white/8 bg-white/60 dark:bg-black/40 backdrop-blur-md overflow-hidden p-7 transition-all duration-300 hover:border-neutral-300 dark:hover:border-white/15 hover:shadow-2xl hover:shadow-black/10 dark:hover:shadow-black/40 hover:-translate-y-1.5"
+                                >
+                                    {/* Gradient wash on hover */}
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${card.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+
+                                    {/* Top row */}
+                                    <div className="relative z-10 flex items-start justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <span className={`w-2 h-2 rounded-full ${card.dot} opacity-60 group-hover:opacity-100 transition-opacity`} />
+                                            <span className="text-[10px] tracking-[0.25em] font-bold text-neutral-400 dark:text-white/30 uppercase group-hover:text-neutral-600 dark:group-hover:text-white/60 transition-colors">
+                                                {card.tagline}
+                                            </span>
+                                        </div>
+                                        <div className="w-8 h-8 rounded-full border border-neutral-200 dark:border-white/10 flex items-center justify-center text-neutral-400 dark:text-white/30 group-hover:bg-black dark:group-hover:bg-white group-hover:border-transparent group-hover:text-white dark:group-hover:text-black transition-all duration-300 -rotate-45 group-hover:rotate-0">
+                                            <ArrowUpRight className="w-3.5 h-3.5" />
+                                        </div>
+                                    </div>
+
+                                    {/* Bottom row */}
+                                    <div className="relative z-10 mt-6">
+                                        <div className="flex items-baseline gap-3 mb-2">
+                                            <span className="text-[10px] font-mono text-neutral-300 dark:text-white/15 group-hover:text-neutral-400 dark:group-hover:text-white/30 transition-colors">
+                                                {card.num}
+                                            </span>
+                                            <h3 className="text-3xl sm:text-4xl font-bold tracking-tighter text-neutral-900 dark:text-white">
+                                                {card.label}
+                                            </h3>
+                                        </div>
+                                        <p className="text-xs text-neutral-500 dark:text-white/35 leading-relaxed group-hover:text-neutral-600 dark:group-hover:text-white/55 transition-colors max-w-xs">
+                                            {card.desc}
+                                        </p>
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+
             </div>
 
             {/* ── Red banner ─────────────────────────────────────────────── */}
