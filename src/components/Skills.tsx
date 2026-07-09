@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,73 +12,73 @@ import { ArrowUpRight } from "lucide-react";
 const CATEGORIES = [
     {
         name: "Frontend",
-        icon: "⌥",
+        icon: "âŒ¥",
         color: "#818cf8",
         skills: [
-            { name: "ReactJS",      icon: "⚛️" },
-            { name: "NextJS",       icon: "▲"  },
+            { name: "ReactJS",      icon: "âš›ï¸" },
+            { name: "NextJS",       icon: "â–²"  },
             { name: "TypeScript",   icon: "TS" },
             { name: "Tailwind CSS", icon: "~"  },
-            { name: "Framer Motion",icon: "◈"  },
-            { name: "HTML / CSS",   icon: "🌐" },
+            { name: "Framer Motion",icon: "â—ˆ"  },
+            { name: "HTML / CSS",   icon: "ðŸŒ" },
         ],
     },
     {
         name: "Backend",
-        icon: "⚙",
+        icon: "âš™",
         color: "#34d399",
         skills: [
-            { name: "NodeJS",    icon: "⬡"  },
+            { name: "NodeJS",    icon: "â¬¡"  },
             { name: "ExpressJS", icon: "EX" },
             { name: "Go",        icon: "Go" },
-            { name: "Java",      icon: "☕" },
-            { name: "GraphQL",   icon: "◉"  },
-            { name: "REST APIs", icon: "⇄"  },
+            { name: "Java",      icon: "â˜•" },
+            { name: "GraphQL",   icon: "â—‰"  },
+            { name: "REST APIs", icon: "â‡„"  },
         ],
     },
     {
         name: "Databases",
-        icon: "🗄",
+        icon: "ðŸ—„",
         color: "#60a5fa",
         skills: [
-            { name: "PostgreSQL", icon: "🐘" },
-            { name: "MongoDB",    icon: "🍃" },
-            { name: "Redis",      icon: "⚡" },
-            { name: "DynamoDB",   icon: "◆"  },
-            { name: "Prisma",     icon: "◭"  },
-            { name: "Kafka",      icon: "📨" },
+            { name: "PostgreSQL", icon: "ðŸ˜" },
+            { name: "MongoDB",    icon: "ðŸƒ" },
+            { name: "Redis",      icon: "âš¡" },
+            { name: "DynamoDB",   icon: "â—†"  },
+            { name: "Prisma",     icon: "â—­"  },
+            { name: "Kafka",      icon: "ðŸ“¨" },
         ],
     },
     {
         name: "Cloud & DevOps",
-        icon: "☁",
+        icon: "â˜",
         color: "#fb923c",
         skills: [
-            { name: "AWS",        icon: "☁️" },
-            { name: "Docker",     icon: "🐳" },
-            { name: "Kubernetes", icon: "⎈"  },
-            { name: "Terraform",  icon: "◈"  },
-            { name: "CI/CD",      icon: "⟳"  },
-            { name: "Linux",      icon: "🐧" },
+            { name: "AWS",        icon: "â˜ï¸" },
+            { name: "Docker",     icon: "ðŸ³" },
+            { name: "Kubernetes", icon: "âŽˆ"  },
+            { name: "Terraform",  icon: "â—ˆ"  },
+            { name: "CI/CD",      icon: "âŸ³"  },
+            { name: "Linux",      icon: "ðŸ§" },
         ],
     },
     {
         name: "Tools & Misc",
-        icon: "🔧",
+        icon: "ðŸ”§",
         color: "#f472b6",
         skills: [
-            { name: "Git",     icon: "◎"  },
-            { name: "GitHub",  icon: "⊙"  },
-            { name: "Vercel",  icon: "▲"  },
+            { name: "Git",     icon: "â—Ž"  },
+            { name: "GitHub",  icon: "âŠ™"  },
+            { name: "Vercel",  icon: "â–²"  },
             { name: "Sanity",  icon: "S"  },
-            { name: "Clerk",   icon: "🔑" },
-            { name: "Expo",    icon: "✦"  },
+            { name: "Clerk",   icon: "ðŸ”‘" },
+            { name: "Expo",    icon: "âœ¦"  },
         ],
     },
 ];
 
 // ---------------------------------------------------------------------------
-// Background HUD wheel — rotates on scroll
+// Background HUD wheel â€” rotates on scroll
 // ---------------------------------------------------------------------------
 
 function HudWheel() {
@@ -219,7 +219,7 @@ function RedBanner() {
     return (
         <div className="relative w-full" style={{ height: 160, overflow: "hidden" }}>
 
-            {/* ── Empty crossing strip — deep crimson ── */}
+            {/* â”€â”€ Empty crossing strip â€” deep crimson â”€â”€ */}
             <div
                 className="absolute w-[200%] -left-[50%]"
                 style={{
@@ -231,7 +231,7 @@ function RedBanner() {
                 }}
             />
 
-            {/* ── Text strip — vivid scarlet ── */}
+            {/* â”€â”€ Text strip â€” vivid scarlet â”€â”€ */}
             <div
                 className="absolute w-[200%] -left-[50%]"
                 style={{
@@ -273,7 +273,7 @@ export function Skills() {
     return (
         <section id="skills" className="relative w-full" style={{ contain: "paint" }}>
 
-            {/* ── Content ────────────────────────────────────────────────── */}
+            {/* â”€â”€ Content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div className="relative flex flex-col items-center pt-24 pb-10 px-4 sm:px-6" style={{ overflowX: "clip" }}>
 
                 {/* Background wheel */}
@@ -292,10 +292,10 @@ export function Skills() {
                     </span>
                 </h2>
 
-                {/* ── Category tabs + skill grid ── */}
+                {/* â”€â”€ Category tabs + skill grid â”€â”€ */}
                 <div className="relative z-10 w-full max-w-5xl mx-auto rounded-[2rem] border border-neutral-200 dark:border-white/8 bg-white/60 dark:bg-black/40 backdrop-blur-md overflow-hidden shadow-xl dark:shadow-none flex flex-col md:flex-row min-h-[380px]">
 
-                    {/* Left — category list */}
+                    {/* Left â€” category list */}
                     <div className="flex flex-row md:flex-col gap-1 p-3 md:p-4 border-b md:border-b-0 md:border-r border-neutral-200 dark:border-white/8 flex-shrink-0 md:w-52 overflow-x-auto md:overflow-visible">
                         {CATEGORIES.map((cat, i) => (
                             <button
@@ -327,7 +327,7 @@ export function Skills() {
                         ))}
                     </div>
 
-                    {/* Right — skill grid */}
+                    {/* Right â€” skill grid */}
                     <div className="flex-1 p-6 sm:p-8 relative overflow-hidden">
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -384,112 +384,177 @@ export function Skills() {
                 <div className="h-16" />
             </div>
 
-            {/* ── Where to Next — Navigator Section ───────────────────────── */}
-            <div className="relative w-full overflow-hidden py-24 px-4 sm:px-6">
+            {/* â”€â”€ Where to Next â€” Dark Map Navigator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            <div className="relative w-full overflow-hidden py-28 px-4 sm:px-6" style={{ background: "#060c18" }}>
 
-                {/* ── Navigator background decoration ── */}
-
-                {/* Dot grid */}
-                <div
-                    className="absolute inset-0 pointer-events-none"
+                {/* World map background image */}
+                <div className="absolute inset-0 pointer-events-none"
                     style={{
-                        backgroundImage: "radial-gradient(circle, rgba(120,120,120,0.13) 1px, transparent 1px)",
-                        backgroundSize: "32px 32px",
+                        backgroundImage: "url('/dark-world-map.png')",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
+                        opacity: 0.55,
                     }}
                 />
 
-                {/* Compass crosshair SVG — centered, slowly rotates */}
+                {/* Dark vignette overlay â€” fades map at edges */}
+                <div className="absolute inset-0 pointer-events-none"
+                    style={{
+                        background: "radial-gradient(ellipse at 50% 50%, transparent 25%, #060c18 80%), linear-gradient(to bottom, #060c18 0%, transparent 15%, transparent 85%, #060c18 100%)",
+                    }}
+                />
+
+                {/* Lat / Lon grid lines */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.07 }} preserveAspectRatio="none">
+                    {[10,20,30,40,50,60,70,80,90].map(p => (
+                        <line key={"h"+p} x1="0" y1={p+"%"} x2="100%" y2={p+"%"} stroke="#38bdf8" strokeWidth="0.5"/>
+                    ))}
+                    {[8,17,25,33,42,50,58,67,75,83,92].map(p => (
+                        <line key={"v"+p} x1={p+"%"} y1="0" x2={p+"%"} y2="100%" stroke="#38bdf8" strokeWidth="0.5"/>
+                    ))}
+                    <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#38bdf8" strokeWidth="1.2"/>
+                    <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#38bdf8" strokeWidth="1.2"/>
+                </svg>
+
+                {/* Compass rose SVG â€” centered */}
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
-                    style={{ width: "min(700px,90vw)", height: "min(700px,90vw)", opacity: 0.18 }}>
-                    <svg viewBox="0 0 500 500" className="w-full h-full" style={{ animation: "nav-spin 60s linear infinite" }}>
+                    style={{ width: "min(540px,78vw)", height: "min(540px,78vw)", opacity: 0.25 }}>
+                    <svg viewBox="0 0 400 400" className="w-full h-full">
                         <defs>
-                            <style>{`@keyframes nav-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+                            <style>{`
+                                @keyframes comp-scan {
+                                    from { transform: rotate(0deg); transform-origin: 200px 200px; }
+                                    to   { transform: rotate(360deg); transform-origin: 200px 200px; }
+                                }
+                                .comp-scan { animation: comp-scan 9s linear infinite; transform-origin: 200px 200px; }
+                            `}</style>
+                            <radialGradient id="swpGrad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.55"/>
+                                <stop offset="100%" stopColor="#38bdf8" stopOpacity="0"/>
+                            </radialGradient>
                         </defs>
-                        {/* Outer ring with ticks */}
-                        <circle cx="250" cy="250" r="240" fill="none" stroke="currentColor" strokeWidth="0.8" />
+
+                        {/* Outer bezel */}
+                        <circle cx="200" cy="200" r="193" fill="none" stroke="#38bdf8" strokeWidth="1"/>
+                        <circle cx="200" cy="200" r="186" fill="none" stroke="#38bdf8" strokeWidth="0.35" strokeDasharray="2 5"/>
+
+                        {/* 72 degree ticks */}
                         {Array.from({ length: 72 }, (_, i) => {
-                            const a = (i / 72) * Math.PI * 2;
+                            const a = (i / 72) * Math.PI * 2 - Math.PI / 2;
                             const isMaj = i % 18 === 0, isMed = i % 6 === 0;
-                            const r0 = 240, len = isMaj ? 20 : isMed ? 12 : 6;
-                            const x1 = 250 + Math.cos(a) * r0, y1 = 250 + Math.sin(a) * r0;
-                            const x2 = 250 + Math.cos(a) * (r0 - len), y2 = 250 + Math.sin(a) * (r0 - len);
-                            return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="currentColor" strokeWidth={isMaj ? 1.5 : isMed ? 1 : 0.5} />;
+                            const r0 = 193, len = isMaj ? 16 : isMed ? 10 : 4;
+                            const sw = isMaj ? 1.5 : isMed ? 0.8 : 0.4;
+                            return <line key={i}
+                                x1={200 + Math.cos(a) * r0}      y1={200 + Math.sin(a) * r0}
+                                x2={200 + Math.cos(a) * (r0-len)} y2={200 + Math.sin(a) * (r0-len)}
+                                stroke="#38bdf8" strokeWidth={sw}
+                            />;
                         })}
-                        {/* Middle ring */}
-                        <circle cx="250" cy="250" r="180" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 8" />
-                        {/* Inner ring */}
-                        <circle cx="250" cy="250" r="100" fill="none" stroke="currentColor" strokeWidth="0.8" />
-                        {/* Crosshair lines */}
-                        <line x1="250" y1="10" x2="250" y2="148" stroke="currentColor" strokeWidth="1" />
-                        <line x1="250" y1="352" x2="250" y2="490" stroke="currentColor" strokeWidth="1" />
-                        <line x1="10" y1="250" x2="148" y2="250" stroke="currentColor" strokeWidth="1" />
-                        <line x1="352" y1="250" x2="490" y2="250" stroke="currentColor" strokeWidth="1" />
-                        {/* Diagonal lines */}
-                        <line x1="250" y1="250" x2="420" y2="80" stroke="currentColor" strokeWidth="0.4" strokeDasharray="3 6" />
-                        <line x1="250" y1="250" x2="80" y2="420" stroke="currentColor" strokeWidth="0.4" strokeDasharray="3 6" />
-                        <line x1="250" y1="250" x2="80" y2="80" stroke="currentColor" strokeWidth="0.4" strokeDasharray="3 6" />
-                        <line x1="250" y1="250" x2="420" y2="420" stroke="currentColor" strokeWidth="0.4" strokeDasharray="3 6" />
-                        {/* Center dot */}
-                        <circle cx="250" cy="250" r="6" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                        <circle cx="250" cy="250" r="2" fill="currentColor" />
-                        {/* Cardinal labels */}
-                        {[["N","250","26"],["S","250","482"],["E","480","255"],["W","22","255"]].map(([l,x,y]) => (
-                            <text key={l} x={x} y={y} textAnchor="middle" dominantBaseline="central"
-                                fontSize="11" fontFamily="monospace" letterSpacing="0.1em" fill="currentColor">{l}</text>
+
+                        {/* Degree labels at 0/90/180/270 */}
+                        {[["0Â°","200","18"],["90Â°","385","205"],["180Â°","200","388"],["270Â°","15","205"]].map(([t,x,y]) => (
+                            <text key={t} x={x} y={y} textAnchor="middle" dominantBaseline="central"
+                                fontSize="9" fontFamily="monospace" fill="#38bdf8" letterSpacing="0.05em">{t}</text>
                         ))}
+
+                        {/* Mid dashed ring */}
+                        <circle cx="200" cy="200" r="138" fill="none" stroke="#38bdf8" strokeWidth="0.5" strokeDasharray="3 7"/>
+
+                        {/* Inner ring */}
+                        <circle cx="200" cy="200" r="78" fill="none" stroke="#38bdf8" strokeWidth="0.9"/>
+
+                        {/* Scanning sweep */}
+                        <path className="comp-scan"
+                            d={`M200,200 L${200},${200-138} A138,138 0 0,1 ${200 + 138*Math.sin(Math.PI/3)},${200 - 138*Math.cos(Math.PI/3)} Z`}
+                            fill="url(#swpGrad)"
+                        />
+
+                        {/* N/S/E/W arrow diamonds */}
+                        {[
+                            { a: -Math.PI/2, label: "N", north: true  },
+                            { a:  Math.PI/2, label: "S", north: false },
+                            { a:  0,          label: "E", north: false },
+                            { a:  Math.PI,    label: "W", north: false },
+                        ].map(({ a, label, north }) => {
+                            const tipX  = 200 + Math.cos(a) * 73;
+                            const tipY  = 200 + Math.sin(a) * 73;
+                            const baseX = 200 + Math.cos(a) * 18;
+                            const baseY = 200 + Math.sin(a) * 18;
+                            const px = Math.cos(a + Math.PI/2) * 9;
+                            const py = Math.sin(a + Math.PI/2) * 9;
+                            const lx  = 200 + Math.cos(a) * 91;
+                            const ly  = 200 + Math.sin(a) * 91;
+                            return (
+                                <g key={label}>
+                                    <polygon
+                                        points={`${tipX},${tipY} ${baseX+px},${baseY+py} ${baseX-px},${baseY-py}`}
+                                        fill={north ? "#38bdf8" : "none"}
+                                        stroke="#38bdf8" strokeWidth="0.8"
+                                    />
+                                    <text x={lx} y={ly} textAnchor="middle" dominantBaseline="central"
+                                        fontSize="11" fontFamily="monospace" fontWeight="bold"
+                                        fill="#38bdf8" letterSpacing="0.12em">{label}</text>
+                                </g>
+                            );
+                        })}
+
+                        {/* Intercardinal short ticks */}
+                        {[1,3,5,7].map((q, i) => {
+                            const a = (q * Math.PI / 4) - Math.PI / 2;
+                            return <line key={i}
+                                x1={200 + Math.cos(a)*73} y1={200 + Math.sin(a)*73}
+                                x2={200 + Math.cos(a)*61} y2={200 + Math.sin(a)*61}
+                                stroke="#38bdf8" strokeWidth="1.5"
+                            />;
+                        })}
+
+                        {/* Center bullseye */}
+                        <circle cx="200" cy="200" r="10"  fill="none" stroke="#38bdf8" strokeWidth="1"/>
+                        <circle cx="200" cy="200" r="3.5" fill="#38bdf8" opacity="0.85"/>
+                        <circle cx="200" cy="200" r="1.2" fill="#fff" opacity="0.95"/>
                     </svg>
                 </div>
 
-                {/* Corner frame brackets */}
-                {[
-                    "top-6 left-6 border-t border-l",
-                    "top-6 right-6 border-t border-r",
-                    "bottom-6 left-6 border-b border-l",
-                    "bottom-6 right-6 border-b border-r",
-                ].map((cls, i) => (
-                    <div key={i} className={`absolute w-8 h-8 ${cls} border-neutral-300 dark:border-white/20 pointer-events-none`} />
+                {/* Corner HUD brackets */}
+                {["top-5 left-5 border-t-2 border-l-2","top-5 right-5 border-t-2 border-r-2","bottom-5 left-5 border-b-2 border-l-2","bottom-5 right-5 border-b-2 border-r-2"].map((cls, i) => (
+                    <div key={i} className={`absolute w-10 h-10 ${cls} pointer-events-none`} style={{ borderColor: "rgba(56,189,248,0.28)" }} />
                 ))}
 
-                {/* Coordinate labels */}
-                <div className="absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-6 pointer-events-none">
-                    {[["LAT", "28.6139° N"], ["LON", "77.2090° E"], ["ALT", "216m"]].map(([k, v]) => (
-                        <div key={k} className="flex items-center gap-1.5 opacity-30 dark:opacity-20">
-                            <span className="text-[9px] font-mono font-bold tracking-widest text-neutral-600 dark:text-neutral-300 uppercase">{k}</span>
-                            <span className="text-[9px] font-mono text-neutral-500 dark:text-neutral-400">{v}</span>
+                {/* Top coordinate bar */}
+                <div className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-6 pointer-events-none">
+                    {[["LAT","28.6139Â° N"],["LON","77.2090Â° E"],["ALT","216 m"]].map(([k,v]) => (
+                        <div key={k} className="flex items-center gap-1.5" style={{ opacity: 0.45 }}>
+                            <span className="text-[9px] font-mono font-bold tracking-widest uppercase" style={{ color: "#38bdf8" }}>{k}</span>
+                            <span className="text-[9px] font-mono" style={{ color: "rgba(56,189,248,0.65)" }}>{v}</span>
                         </div>
                     ))}
                 </div>
 
-                {/* Pulsing center glow */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full pointer-events-none"
-                    style={{ background: "radial-gradient(circle, rgba(168,85,247,0.07) 0%, transparent 70%)", animation: "nav-pulse 4s ease-in-out infinite" }} />
-                <style>{`@keyframes nav-pulse { 0%,100%{opacity:0.4;transform:translate(-50%,-50%) scale(1)} 50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)} }`}</style>
+                {/* Bottom status bar */}
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 pointer-events-none">
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#38bdf8", boxShadow: "0 0 6px #38bdf8", opacity: 0.75 }} />
+                    <span className="text-[9px] font-mono tracking-widest uppercase" style={{ color: "rgba(56,189,248,0.4)" }}>System Online Â· Awaiting Input</span>
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#38bdf8", boxShadow: "0 0 6px #38bdf8", opacity: 0.75 }} />
+                </div>
 
-                {/* ── Content ── */}
+                {/* â”€â”€ Content â”€â”€ */}
                 <div className="relative z-10 flex flex-col items-center">
 
-                    {/* Label with navigator pip */}
+                    {/* Label */}
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="flex items-center gap-1">
-                            <span className="w-1 h-1 rounded-full bg-neutral-400 dark:bg-white/30" />
-                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-500 dark:bg-white/50" />
-                            <span className="w-1 h-1 rounded-full bg-neutral-400 dark:bg-white/30" />
-                        </div>
-                        <p className="text-[11px] tracking-[0.35em] font-bold text-neutral-400 dark:text-white/35 uppercase font-mono">
+                        <div className="h-px w-8" style={{ background: "rgba(56,189,248,0.4)" }} />
+                        <p className="text-[11px] tracking-[0.4em] font-bold uppercase font-mono" style={{ color: "rgba(56,189,248,0.7)" }}>
                             Navigate
                         </p>
-                        <div className="flex items-center gap-1">
-                            <span className="w-1 h-1 rounded-full bg-neutral-400 dark:bg-white/30" />
-                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-500 dark:bg-white/50" />
-                            <span className="w-1 h-1 rounded-full bg-neutral-400 dark:bg-white/30" />
-                        </div>
+                        <div className="h-px w-8" style={{ background: "rgba(56,189,248,0.4)" }} />
                     </div>
 
                     {/* Heading */}
-                    <h2 className="text-center text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-neutral-900 dark:text-white mb-3">
+                    <h2 className="text-center text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white mb-3">
                         Where to{" "}
                         <span className="font-serif italic" style={{
-                            background: "linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%)",
+                            background: "linear-gradient(135deg, #38bdf8 0%, #818cf8 55%, #c084fc 100%)",
                             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                             backgroundClip: "text", paddingRight: "0.05em",
                         }}>
@@ -498,106 +563,73 @@ export function Skills() {
                     </h2>
 
                     {/* Sub-label */}
-                    <p className="text-xs font-mono text-neutral-400 dark:text-white/25 tracking-widest mb-14">
-                        — SELECT DESTINATION —
+                    <p className="text-[10px] font-mono tracking-[0.35em] mb-14 uppercase" style={{ color: "rgba(56,189,248,0.35)" }}>
+                        â€” Select Destination â€”
                     </p>
 
                     {/* Cards */}
                     <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {[
-                            {
-                                href:    "/about",
-                                label:   "About",
-                                tagline: "get to know me",
-                                desc:    "The human behind the keyboard — my story, obsessions, and the questionable number of tabs I have open.",
-                                color:   "#a78bfa",
-                                num:     "01",
-                            },
-                            {
-                                href:    "/projects",
-                                label:   "Work",
-                                tagline: "how i spend my spare time",
-                                desc:    "Side projects, passion builds & things I couldn't resist shipping at 2 AM.",
-                                color:   "#60a5fa",
-                                num:     "02",
-                            },
-                            {
-                                href:    "/blog",
-                                label:   "Blog",
-                                tagline: "thoughts that escaped my head",
-                                desc:    "Unfiltered takes on tech, building stuff, and the occasional existential crisis about semicolons.",
-                                color:   "#fbbf24",
-                                num:     "03",
-                            },
-                            {
-                                href:    "/resume",
-                                label:   "Resume",
-                                tagline: "the official version of me",
-                                desc:    "All the things I've built, learned and broken — neatly formatted so HR doesn't cry.",
-                                color:   "#34d399",
-                                num:     "04",
-                            },
-                            {
-                                href:    "/contact",
-                                label:   "Contact",
-                                tagline: "say something nice (or don't)",
-                                desc:    "Got an idea, a collab, or just want to say hi? My inbox is always open — and I actually reply.",
-                                color:   "#f472b6",
-                                num:     "05",
-                            },
+                            { href:"/about",    label:"About",   tagline:"get to know me",               desc:"The human behind the keyboard â€” my story, obsessions, and the questionable number of tabs I have open.", color:"#a78bfa", num:"01" },
+                            { href:"/projects", label:"Work",    tagline:"how i spend my spare time",    desc:"Side projects, passion builds & things I couldn't resist shipping at 2 AM.",                               color:"#38bdf8", num:"02" },
+                            { href:"/blog",     label:"Blog",    tagline:"thoughts that escaped my head",desc:"Unfiltered takes on tech, building stuff, and the occasional existential crisis about semicolons.",        color:"#fbbf24", num:"03" },
+                            { href:"/resume",   label:"Resume",  tagline:"the official version of me",   desc:"All the things I've built, learned and broken â€” neatly formatted so HR doesn't cry.",                    color:"#34d399", num:"04" },
+                            { href:"/contact",  label:"Contact", tagline:"say something nice (or don't)",desc:"Got an idea, a collab, or just want to say hi? My inbox is always open â€” and I actually reply.",         color:"#f472b6", num:"05" },
                         ].map((card, i) => (
                             <motion.div
                                 key={card.href}
                                 initial={{ opacity: 0, y: 24 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, margin: "-60px" }}
-                                transition={{ duration: 0.55, delay: i * 0.08, ease: "easeOut" }}
+                                transition={{ duration: 0.55, delay: i * 0.09, ease: "easeOut" }}
                                 className={i === 4 ? "sm:col-span-2 lg:col-span-1" : ""}
                             >
                                 <Link
                                     href={card.href}
-                                    className="group relative flex flex-col justify-between h-full min-h-[200px] rounded-[1.75rem] border border-neutral-200/80 dark:border-white/8 bg-white/70 dark:bg-[#0a0a0a]/80 backdrop-blur-sm overflow-hidden p-7 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl"
-                                    style={{ ["--card-color" as string]: card.color }}
+                                    className="group relative flex flex-col justify-between h-full min-h-[200px] rounded-2xl overflow-hidden p-6 transition-all duration-300 hover:-translate-y-1.5"
+                                    style={{
+                                        background: "rgba(6,12,24,0.78)",
+                                        border: `1px solid ${card.color}30`,
+                                        backdropFilter: "blur(14px)",
+                                    }}
                                 >
-                                    {/* Corner bracket accent */}
-                                    <div className="absolute top-4 right-4 w-5 h-5 border-t border-r opacity-20 group-hover:opacity-60 transition-opacity duration-300"
-                                        style={{ borderColor: card.color }} />
-                                    <div className="absolute bottom-4 left-4 w-5 h-5 border-b border-l opacity-20 group-hover:opacity-60 transition-opacity duration-300"
-                                        style={{ borderColor: card.color }} />
+                                    {/* Hover border + radial glow */}
+                                    <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                                        style={{ boxShadow: `inset 0 0 0 1px ${card.color}70`, background: `radial-gradient(ellipse at 50% 110%, ${card.color}15 0%, transparent 65%)` }} />
 
-                                    {/* Hover glow */}
-                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[1.75rem]"
-                                        style={{ background: `radial-gradient(ellipse at 50% 100%, ${card.color}18 0%, transparent 70%)` }} />
-
-                                    {/* Top row */}
-                                    <div className="relative z-10 flex items-start justify-between">
-                                        <div className="flex items-center gap-2.5">
-                                            {/* Coordinate-style number */}
-                                            <span className="text-[9px] font-mono font-bold tracking-widest px-1.5 py-0.5 rounded border opacity-50 group-hover:opacity-90 transition-opacity"
-                                                style={{ color: card.color, borderColor: card.color }}>
-                                                {card.num}
-                                            </span>
-                                            <span className="text-[10px] tracking-[0.2em] font-bold text-neutral-400 dark:text-white/30 uppercase group-hover:text-neutral-600 dark:group-hover:text-white/60 transition-colors">
-                                                {card.tagline}
-                                            </span>
-                                        </div>
-                                        <div className="w-8 h-8 rounded-full border border-neutral-300 dark:border-white/15 flex items-center justify-center text-neutral-400 dark:text-white/30 group-hover:border-transparent transition-all duration-300 -rotate-45 group-hover:rotate-0">
-                                            <ArrowUpRight className="w-3.5 h-3.5 group-hover:hidden" />
-                                            <span className="hidden group-hover:block text-[10px] font-mono font-bold"
-                                                style={{ color: card.color }}>GO</span>
+                                    {/* Top */}
+                                    <div className="relative z-10">
+                                        <div className="absolute -top-1 -left-1 w-4 h-4 border-t border-l opacity-30 group-hover:opacity-100 transition-opacity duration-300" style={{ borderColor: card.color }} />
+                                        <div className="absolute -top-1 -right-1 w-4 h-4 border-t border-r opacity-30 group-hover:opacity-100 transition-opacity duration-300" style={{ borderColor: card.color }} />
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-sm border tracking-widest opacity-50 group-hover:opacity-100 transition-opacity"
+                                                    style={{ color: card.color, borderColor: `${card.color}55` }}>
+                                                    {card.num}
+                                                </span>
+                                                <span className="text-[10px] font-mono tracking-[0.18em] uppercase opacity-35 group-hover:opacity-65 transition-opacity"
+                                                    style={{ color: card.color }}>
+                                                    {card.tagline}
+                                                </span>
+                                            </div>
+                                            <div className="w-7 h-7 rounded-full border flex items-center justify-center transition-all duration-300 -rotate-45 group-hover:rotate-0"
+                                                style={{ borderColor: `${card.color}45`, color: card.color }}>
+                                                <ArrowUpRight className="w-3 h-3" />
+                                            </div>
                                         </div>
                                     </div>
 
-                                    {/* Bottom row */}
+                                    {/* Bottom */}
                                     <div className="relative z-10 mt-6">
-                                        <h3 className="text-3xl sm:text-4xl font-bold tracking-tighter text-neutral-900 dark:text-white mb-2">
+                                        <div className="absolute -bottom-1 -left-1 w-4 h-4 border-b border-l opacity-30 group-hover:opacity-100 transition-opacity duration-300" style={{ borderColor: card.color }} />
+                                        <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b border-r opacity-30 group-hover:opacity-100 transition-opacity duration-300" style={{ borderColor: card.color }} />
+                                        <h3 className="text-3xl sm:text-4xl font-bold tracking-tighter text-white mb-2">
                                             {card.label}
                                         </h3>
-                                        <p className="text-xs text-neutral-500 dark:text-white/35 leading-relaxed group-hover:text-neutral-600 dark:group-hover:text-white/55 transition-colors max-w-xs">
+                                        <p className="text-xs leading-relaxed max-w-xs transition-opacity duration-300 opacity-35 group-hover:opacity-65" style={{ color: "#a0b4c8" }}>
                                             {card.desc}
                                         </p>
-                                        {/* Bottom accent bar */}
-                                        <div className="mt-4 w-0 group-hover:w-12 h-0.5 rounded-full transition-all duration-500"
+                                        <div className="mt-4 h-px w-0 group-hover:w-10 transition-all duration-500 rounded-full"
                                             style={{ background: card.color }} />
                                     </div>
                                 </Link>
@@ -605,9 +637,9 @@ export function Skills() {
                         ))}
                     </div>
                 </div>
-
-            {/* ── Red banner ─────────────────────────────────────────────── */}
             </div>
+
+            {/* â”€â”€ Red banner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <RedBanner />
         </section>
     );
