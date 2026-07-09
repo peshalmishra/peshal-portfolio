@@ -607,6 +607,7 @@ export function Skills() {
                 </div>
 
             {/* ── Red banner ─────────────────────────────────────────────── */}
+            </div>
             <RedBanner />
         </section>
     );
