@@ -28,14 +28,14 @@ const DARK_CONFIG: Required<GlobeConfig> = {
   markers: [{ location: [20.5937, 78.9629], size: 0.05 }],
 
   baseColor: [0.18, 0.18, 0.18],
-  markerColor: [1, 1, 1],
-  glowColor: [0.35, 0.35, 0.35],
+  markerColor: [0.5, 0.5, 0.5],
+  glowColor: [0.2, 0.2, 0.2],
 
-  mapBrightness: 7,
+  mapBrightness: 3,
   mapSamples: 16000,
 
   dark: 1,
-  diffuse: 1.8,
+  diffuse: 1.2,
   theta: 0.3,
   rotationSpeed: 0.003,
 };
@@ -44,14 +44,14 @@ const LIGHT_CONFIG: Required<GlobeConfig> = {
   markers: [{ location: [20.5937, 78.9629], size: 0.05 }],
 
   baseColor: [0.92, 0.92, 0.92],
-  markerColor: [0.15, 0.15, 0.15],
-  glowColor: [0.7, 0.7, 0.7],
+  markerColor: [0.4, 0.4, 0.4],
+  glowColor: [0.5, 0.5, 0.5],
 
-  mapBrightness: 4,
+  mapBrightness: 2,
   mapSamples: 16000,
 
   dark: 0,
-  diffuse: 1.4,
+  diffuse: 1.0,
   theta: 0.3,
   rotationSpeed: 0.003,
 };
