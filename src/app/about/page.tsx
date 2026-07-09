@@ -1,9 +1,12 @@
 import { About } from "@/components/About";
+import { PageTransition } from "@/components/PageTransition";
 
 export default function AboutPage() {
     return (
-        <div className="w-full">
-            <About />
-        </div>
+        <PageTransition>
+            <div className="w-full">
+                <About />
+            </div>
+        </PageTransition>
     );
 }

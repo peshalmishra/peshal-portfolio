@@ -1,9 +1,12 @@
 import { Skills } from "@/components/Skills";
+import { PageTransition } from "@/components/PageTransition";
 
 export default function SkillsPage() {
     return (
-        <div className="pt-24 pb-12">
-            <Skills />
-        </div>
+        <PageTransition>
+            <div className="pt-24 pb-12">
+                <Skills />
+            </div>
+        </PageTransition>
     );
 }
