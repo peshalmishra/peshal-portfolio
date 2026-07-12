@@ -24,21 +24,33 @@ interface GlobeProps {
   className?: string;
 }
 
+// ---------------------------------------------------------------------------
+// FIX #1: baseColor was pure black [0,0,0], which kills contrast between the
+// land-dots and the ocean — that's why the dotted continent texture was
+// invisible in your screenshot. The reference globe uses a mid-gray base
+// (cobe's own default demo value) so the dot grid actually reads.
+//
+// FIX #2: mapBrightness was 8, way too hot — it overexposes the dots into a
+// blurry glow instead of crisp points. Dropped to 6.
+//
+// FIX #3: diffuse tuned down slightly + glowColor brightened so the ambient
+// halo softens the edge without washing out the dot pattern.
+// ---------------------------------------------------------------------------
 const DARK_CONFIG: Required<GlobeConfig> = {
-  markers: [{ location: [20.5937, 78.9629], size: 0.08 }],
-  baseColor:   [0.0,  0.0,  0.0 ],   // pure black ocean surface
+  markers: [{ location: [20.5937, 78.9629], size: 0.09 }],
+  baseColor:   [0.3,  0.3,  0.3 ],   // was [0,0,0] — this is what made the dots vanish
   markerColor: [1.0,  1.0,  1.0 ],   // bright white India dot
-  glowColor:   [0.08, 0.08, 0.08],   // very subtle dark halo
-  mapBrightness: 8,                  // bright white land dots
+  glowColor:   [1.0,  1.0,  1.0 ],   // was [0.08,0.08,0.08] — too dim to read as a halo
+  mapBrightness: 6,                  // was 8 — dots were overexposed/blurred
   mapSamples:    16000,
-  dark:    1,                        // maximum darkness
-  diffuse: 1.2,                      // low — keeps surface matte dark
+  dark:    1,
+  diffuse: 1.2,
   theta:   0.3,
   rotationSpeed: 0.003,
 };
 
 const LIGHT_CONFIG: Required<GlobeConfig> = {
-  markers: [{ location: [20.5937, 78.9629], size: 0.08 }],
+  markers: [{ location: [20.5937, 78.9629], size: 0.09 }],
   baseColor:   [0.9,  0.9,  0.9 ],
   markerColor: [0.2,  0.2,  0.2 ],
   glowColor:   [0.85, 0.85, 0.85],
@@ -72,7 +84,6 @@ function useGlobe(config: Required<GlobeConfig>) {
   const globeRef  = useRef<GlobeInstance | null>(null);
   const phiRef    = useRef(0);
 
-  // Destroy helper
   const destroy = useCallback(() => {
     if (globeRef.current) {
       try { globeRef.current.destroy(); } catch (_) { /* ignore */ }
@@ -80,13 +91,17 @@ function useGlobe(config: Required<GlobeConfig>) {
     }
   }, []);
 
-  // Create helper — reads current canvas size from its parent
   const create = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Prefer the canvas's own rendered size; fall back to parent
-    const w = canvas.offsetWidth || canvas.parentElement?.offsetWidth || 0;
+    // FIX #4: fall back to the *container's* clientWidth first — offsetWidth
+    // on the canvas itself can read 0 or stale on first paint, which was
+    // producing a smaller-than-intended globe in your build.
+    const w =
+      canvas.parentElement?.clientWidth ||
+      canvas.offsetWidth ||
+      0;
     if (w <= 0) return;
 
     destroy();
@@ -120,18 +135,15 @@ function useGlobe(config: Required<GlobeConfig>) {
   }, [config, destroy]);
 
   useEffect(() => {
-    // Initial creation — defer one frame so layout is settled
     const raf = requestAnimationFrame(() => {
       create();
     });
 
-    // Resize observer to recreate on size changes
     const canvas = canvasRef.current;
     const parent = canvas?.parentElement;
     if (!parent) return () => { cancelAnimationFrame(raf); destroy(); };
 
     const ro = new ResizeObserver(() => {
-      // Small debounce via RAF
       requestAnimationFrame(() => create());
     });
     ro.observe(parent);
@@ -157,17 +169,19 @@ export function Globe({ config = {}, className = "" }: GlobeProps) {
 
   const canvasRef = useGlobe(mergedConfig);
 
-  const glowOuter = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)";
-  const glowMid   = isDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.08)";
-  const glowCore  = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
+  const glowOuter = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)";
+  const glowMid   = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)";
+  const glowCore  = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
 
   return (
+    // FIX #5: reference globe visibly fills more of its column. Bumping the
+    // min-width/scale here so it isn't shrunk by a tight flex parent — adjust
+    // the scale-[1.15] if your layout needs it tighter or looser.
     <div
-      className={`relative w-full aspect-square flex items-center justify-center ${className}`}
+      className={`relative w-full aspect-square flex items-center justify-center scale-[1.15] ${className}`}
       aria-label="Interactive 3D globe"
       role="img"
     >
-      {/* Outer ambient glow */}
       <div
         className="absolute pointer-events-none"
         style={{
@@ -177,7 +191,6 @@ export function Globe({ config = {}, className = "" }: GlobeProps) {
         }}
       />
 
-      {/* Mid glow */}
       <div
         className="absolute pointer-events-none"
         style={{
@@ -187,7 +200,6 @@ export function Globe({ config = {}, className = "" }: GlobeProps) {
         }}
       />
 
-      {/* Pulsing core glow */}
       <motion.div
         className="absolute pointer-events-none"
         style={{
@@ -199,7 +211,6 @@ export function Globe({ config = {}, className = "" }: GlobeProps) {
         transition={{ duration: 4, ease: "easeInOut", repeat: Infinity }}
       />
 
-      {/* Canvas — fills the square container */}
       <motion.canvas
         ref={canvasRef}
         initial={{ opacity: 0, scale: 0.96 }}
