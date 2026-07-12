@@ -4,225 +4,377 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 // ---------------------------------------------------------------------------
-// Tick markers — rendered once, never change
+// SVG <defs> — gradients shared across all SVG layers
 // ---------------------------------------------------------------------------
-
-function DialMarkers() {
+function ClockDefs() {
     return (
-        <div className="absolute inset-0 pointer-events-none">
-            {/* Minute / hour tick marks */}
-            {Array.from({ length: 60 }).map((_, i) => {
-                const isHour = i % 5 === 0;
-                return (
-                    <div
-                        key={i}
-                        className="absolute inset-0 flex items-start justify-center"
-                        style={{ transform: `rotate(${i * 6}deg)` }}
-                    >
-                        <div
-                            className={`mt-[2%] ${
-                                isHour
-                                    ? "w-[1.5px] h-[5%] bg-white"
-                                    : "w-[1px]   h-[2.5%] bg-white/50"
-                            }`}
-                        />
-                    </div>
-                );
-            })}
-        </div>
+        <defs>
+            {/* Hour hand — mirror-polished chrome, sharp highlight */}
+            <linearGradient id="grad-hour" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%"   stopColor="#1a1a1a" />
+                <stop offset="18%"  stopColor="#aaaaaa" />
+                <stop offset="38%"  stopColor="#f8f8f8" />
+                <stop offset="50%"  stopColor="#ffffff" />
+                <stop offset="62%"  stopColor="#e0e0e0" />
+                <stop offset="82%"  stopColor="#888888" />
+                <stop offset="100%" stopColor="#1a1a1a" />
+            </linearGradient>
+
+            {/* Minute hand — high-contrast polished steel */}
+            <linearGradient id="grad-minute" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%"   stopColor="#111" />
+                <stop offset="20%"  stopColor="#999" />
+                <stop offset="40%"  stopColor="#f0f0f0" />
+                <stop offset="50%"  stopColor="#ffffff" />
+                <stop offset="60%"  stopColor="#d8d8d8" />
+                <stop offset="82%"  stopColor="#777" />
+                <stop offset="100%" stopColor="#111" />
+            </linearGradient>
+
+            {/* Second hand — razor polished silver */}
+            <linearGradient id="grad-second" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%"   stopColor="#222" />
+                <stop offset="35%"  stopColor="#dddddd" />
+                <stop offset="50%"  stopColor="#ffffff" />
+                <stop offset="65%"  stopColor="#cccccc" />
+                <stop offset="100%" stopColor="#222" />
+            </linearGradient>
+
+            {/* Pinion cap — convex mirror chrome */}
+            <radialGradient id="grad-cap" cx="30%" cy="25%" r="65%">
+                <stop offset="0%"   stopColor="#ffffff" />
+                <stop offset="25%"  stopColor="#d0d0d0" />
+                <stop offset="55%"  stopColor="#777" />
+                <stop offset="85%"  stopColor="#1a1a1a" />
+                <stop offset="100%" stopColor="#000" />
+            </radialGradient>
+
+            {/* Sharp specular shimmer on hands */}
+            <filter id="glow-hand" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="1" result="blur" />
+                <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+
+            {/* Crisp luminance glow on hour markers */}
+            <filter id="glow-marker" x="-80%" y="-80%" width="260%" height="260%">
+                <feGaussianBlur stdDeviation="0.8" result="blur" />
+                <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+        </defs>
     );
 }
 
 // ---------------------------------------------------------------------------
-// Hour index markers (Rolex-style)
+// Outer tick ring — THREE distinct tiers:
+//   • Quarter (12/3/6/9) — tallest & thickest
+//   • Hour   (other 8)   — medium
+//   • Minute (remaining) — shortest & thinnest
 // ---------------------------------------------------------------------------
+function DialTicks() {
+    return (
+        <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            viewBox="0 0 200 200"
+        >
+            <ClockDefs />
+            {Array.from({ length: 60 }).map((_, i) => {
+                const isQuarter = i % 15 === 0;              // 12, 3, 6, 9
+                const isHour    = !isQuarter && i % 5 === 0;  // other 8 hours
 
+                const outerR = 96;
+                // Three visually distinct inner radii
+                const innerR = isQuarter ? 81   // 15 units long
+                             : isHour    ? 87   //  9 units long
+                             :             93;  //  3 units long
+
+                const stroke = isQuarter ? "rgba(255,255,255,1.00)"
+                             : isHour    ? "rgba(255,255,255,0.72)"
+                             :             "rgba(255,255,255,0.28)";
+
+                const width  = isQuarter ? 2.6
+                             : isHour    ? 1.5
+                             :             0.7;
+
+                const angle = (i * 6 - 90) * (Math.PI / 180);
+                const x1 = 100 + outerR * Math.cos(angle);
+                const y1 = 100 + outerR * Math.sin(angle);
+                const x2 = 100 + innerR * Math.cos(angle);
+                const y2 = 100 + innerR * Math.sin(angle);
+
+                return (
+                    <line
+                        key={i}
+                        x1={x1} y1={y1}
+                        x2={x2} y2={y2}
+                        stroke={stroke}
+                        strokeWidth={width}
+                        strokeLinecap="round"
+                    />
+                );
+            })}
+        </svg>
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Outer minute number labels — one per 5-minute mark, rotated to read upright
+// ---------------------------------------------------------------------------
+function MinuteLabels() {
+    return (
+        <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            viewBox="0 0 200 200"
+        >
+            {Array.from({ length: 12 }).map((_, i) => {
+                const minute   = i * 5;           // 0, 5, 10 … 55
+                const label    = minute === 0 ? "60" : String(minute).padStart(2, "0");
+                const angleDeg = i * 30 - 90;     // 12 o'clock = -90°
+                const angleRad = angleDeg * (Math.PI / 180);
+                // Sit just inside the tick marks (outerR = 95) → place at r ≈ 83
+                const r = 83;
+                const x = 100 + r * Math.cos(angleRad);
+                const y = 100 + r * Math.sin(angleRad);
+
+                return (
+                    <text
+                        key={minute}
+                        x={x} y={y}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        fontSize="5.8"
+                        fontFamily="'Inter', 'SF Pro Display', sans-serif"
+                        fontWeight="300"
+                        letterSpacing="0.6"
+                        fill="rgba(255,255,255,0.38)"
+                    >
+                        {label}
+                    </text>
+                );
+            })}
+        </svg>
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Inner 24-hour number ring
+// ---------------------------------------------------------------------------
+function InnerRing() {
+    // All 12 even hours, one every 30°, starting at 12 o'clock = "24"
+    const labels = [
+        { label: "24", angleDeg:   0 },
+        { label: "02", angleDeg:  30 },
+        { label: "04", angleDeg:  60 },
+        { label: "06", angleDeg:  90 },
+        { label: "08", angleDeg: 120 },
+        { label: "10", angleDeg: 150 },
+        { label: "12", angleDeg: 180 },
+        { label: "14", angleDeg: 210 },
+        { label: "16", angleDeg: 240 },
+        { label: "18", angleDeg: 270 },
+        { label: "20", angleDeg: 300 },
+        { label: "22", angleDeg: 330 },
+    ];
+
+    return (
+        <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            viewBox="0 0 200 200"
+        >
+            {/* Subtle inner circle track */}
+            <circle
+                cx="100" cy="100" r="71"
+                fill="none"
+                stroke="rgba(255,255,255,0.08)"
+                strokeWidth="0.5"
+            />
+            {labels.map(({ label, angleDeg }) => {
+                const rad = (angleDeg - 90) * (Math.PI / 180);
+                const x   = 100 + 71 * Math.cos(rad);
+                const y   = 100 + 71 * Math.sin(rad);
+                return (
+                    <text
+                        key={label}
+                        x={x} y={y}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        fontSize="6.5"
+                        fontFamily="'Inter', 'SF Pro Display', sans-serif"
+                        fontWeight="300"
+                        fill="rgba(255,255,255,0.38)"
+                        letterSpacing="0.8"
+                    >
+                        {label}
+                    </text>
+                );
+            })}
+        </svg>
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Baton hour markers — slim white rectangles with a luminance glow
+// ---------------------------------------------------------------------------
 function HourMarkers() {
     return (
-        <div className="absolute inset-0 pointer-events-none">
+        <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            viewBox="0 0 200 200"
+        >
             {Array.from({ length: 12 }).map((_, i) => {
-                const hour     = i === 0 ? 12 : i;
-                const rotation = i * 30;
+                const angleDeg = i * 30 - 90;
+                const angleRad = angleDeg * (Math.PI / 180);
+                const isQuarter = i % 3 === 0; // 12, 3, 6, 9
+                const isTwelve  = i === 0;
 
-                if (hour === 12) {
-                    return (
-                        <div
-                            key={hour}
-                            className="absolute inset-0 flex flex-col items-center justify-start z-10"
-                            style={{ transform: `rotate(${rotation}deg)` }}
-                        >
-                            <svg
-                                className="mt-[7%] sm:mt-[6%] w-[16px] sm:w-[22px] h-[16px] sm:h-[22px]"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                            >
-                                <polygon
-                                    points="12,22 2,2 22,2"
-                                    className="fill-[#f1faee] stroke-neutral-300"
-                                    strokeWidth="2"
-                                    strokeLinejoin="round"
-                                />
-                            </svg>
-                        </div>
-                    );
-                }
+                const w      = isTwelve ? 4 : isQuarter ? 3.5 : 2.6;
+                const len    = isTwelve ? 15 : isQuarter ? 14  : 11;
+                const outerR = 84;
+                const innerR = outerR - len;
 
-                if (hour === 3 || hour === 6 || hour === 9) {
-                    return (
-                        <div
-                            key={hour}
-                            className="absolute inset-0 flex flex-col items-center justify-start z-10"
-                            style={{ transform: `rotate(${rotation}deg)` }}
-                        >
-                            <div className="mt-[8%] sm:mt-[7%] w-[8px] sm:w-[12px] h-[18px] sm:h-[24px] bg-[#f1faee] border-[1.5px] sm:border-[2px] border-neutral-300 rounded-[1px] shadow-[0_2px_3px_rgba(0,0,0,0.8)]" />
-                        </div>
-                    );
-                }
+                const x1 = 100 + outerR * Math.cos(angleRad);
+                const y1 = 100 + outerR * Math.sin(angleRad);
+                const x2 = 100 + innerR * Math.cos(angleRad);
+                const y2 = 100 + innerR * Math.sin(angleRad);
 
                 return (
-                    <div
-                        key={hour}
-                        className="absolute inset-0 flex flex-col items-center justify-start z-10"
-                        style={{ transform: `rotate(${rotation}deg)` }}
-                    >
-                        <div className="mt-[8%] sm:mt-[7%] w-[14px] sm:w-[18px] h-[14px] sm:h-[18px] bg-[#f1faee] border-[1.5px] sm:border-[2px] border-neutral-300 rounded-full shadow-[0_2px_3px_rgba(0,0,0,0.8)]" />
-                    </div>
+                    <line
+                        key={i}
+                        x1={x1} y1={y1}
+                        x2={x2} y2={y2}
+                        stroke="rgba(255,255,255,0.92)"
+                        strokeWidth={w}
+                        strokeLinecap="butt"
+                        filter="url(#glow-marker)"
+                    />
                 );
             })}
-        </div>
+        </svg>
     );
 }
 
 // ---------------------------------------------------------------------------
-// Hands — direct DOM mutation via refs for 60 fps with zero re-renders
+// Hands — luxury Dauphine pointed hands (polygon shapes)
 // ---------------------------------------------------------------------------
-
 interface HandsProps {
-    hourRef:   React.RefObject<HTMLDivElement | null>;
-    minuteRef: React.RefObject<HTMLDivElement | null>;
-    secondRef: React.RefObject<HTMLDivElement | null>;
+    hourRef:   React.RefObject<SVGGElement | null>;
+    minuteRef: React.RefObject<SVGGElement | null>;
+    secondRef: React.RefObject<SVGGElement | null>;
 }
 
 function Hands({ hourRef, minuteRef, secondRef }: HandsProps) {
     return (
-        <div className="absolute inset-0 pointer-events-none">
-
-            {/* Hour hand — Mercedes style */}
-            <div ref={hourRef} className="absolute inset-0 z-20">
-                <div
-                    className="absolute bottom-1/2 left-1/2 -translate-x-1/2 origin-bottom flex flex-col items-center justify-end"
-                    style={{ height: "30%", width: "16px" }}
-                >
-                    {/*
-                        FIX: drop-shadow moved to a static wrapper, NOT the animating element.
-                        CSS filters on RAF-animated elements trigger re-compositing every frame,
-                        causing dropped frames on mobile. The wrapper is static so the filter
-                        is composited once.
-                    */}
-                    <div className="w-full h-full drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)]">
-                        <svg
-                            className="w-full h-full overflow-visible"
-                            viewBox="0 0 24 100"
-                            preserveAspectRatio="xMidYMax meet"
-                        >
-                            <rect x="10" y="35" width="4"  height="65" className="fill-neutral-200" />
-                            <circle cx="12" cy="24" r="10" className="fill-neutral-200" />
-                            <circle cx="12" cy="24" r="8"  className="fill-[#f1faee]" />
-                            <path d="M12,24 L12,16 M12,24 L7,29 M12,24 L17,29" stroke="#ccc" strokeWidth="2.5" strokeLinecap="round" />
-                            <polygon points="12,-5 18,13 6,13"  className="fill-neutral-200" />
-                            <polygon points="12,0 15,11 9,11"  className="fill-[#f1faee]" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            {/* Minute hand — sword style */}
-            <div ref={minuteRef} className="absolute inset-0 z-20">
-                <div
-                    className="absolute bottom-1/2 left-1/2 -translate-x-1/2 origin-bottom flex flex-col items-center justify-end"
-                    style={{ height: "42%", width: "12px" }}
-                >
-                    <div className="w-full h-full drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)]">
-                        <svg
-                            className="w-full h-full overflow-visible"
-                            viewBox="0 0 12 100"
-                            preserveAspectRatio="none"
-                        >
-                            <polygon points="6,-5 12,15 9,100 3,100 0,15" className="fill-neutral-200" />
-                            <polygon points="6,0 10,18 8,95 4,95 2,18"   className="fill-[#f1faee]" />
-                            <line x1="6" y1="0" x2="6" y2="100" stroke="rgba(0,0,0,0.15)" strokeWidth="0.5" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+        <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            viewBox="0 0 200 200"
+        >
+            {/*
+                HOUR HAND — Dauphine diamond:
+                Sharp tip at top, bulges to shoulder ~⅔ down,
+                necks back to pivot, tiny pointed tail stub below.
+                All coords relative to centre = (100, 100).
+            */}
+            <g ref={hourRef} style={{ transformOrigin: "100px 100px" }}>
+                {/* Depth shadow — offset clone */}
+                <polygon
+                    points="100,45 106,68 103.2,94 101.8,112 100,115 98.2,112 96.8,94 94,68"
+                    fill="rgba(0,0,0,0.55)"
+                    transform="translate(0.6, 1)"
+                />
+                {/* Main body */}
+                <polygon
+                    points="100,45 106,68 103.2,94 101.8,112 100,115 98.2,112 96.8,94 94,68"
+                    fill="url(#grad-hour)"
+                />
+                {/* Faceted centre-ridge highlight — slim inner diamond */}
+                <polygon
+                    points="100,45 101,70 100.5,94 100.2,113 100,115 99.8,113 99.5,94 99,70"
+                    fill="rgba(255,255,255,0.28)"
+                />
+                {/* Thin hair-line spine for the 3D raised-edge illusion */}
+                <line x1="100" y1="45" x2="100" y2="113"
+                    stroke="rgba(255,255,255,0.15)" strokeWidth="0.4" />
+            </g>
 
             {/*
-                FIX: Second hand now uses the same origin-bottom / bottom-1/2 pattern
-                as the other two hands instead of the magic-number origin-[50%_83.33%].
-                The tail (counter-weight) is drawn below y=0 in SVG space, which
-                naturally extends behind the pivot when rotated from the bottom.
+                MINUTE HAND — slim Dauphine:
+                Longer and narrower than hour, same diamond taper.
             */}
-            <div ref={secondRef} className="absolute inset-0 z-30">
-                <div
-                    className="absolute bottom-1/2 left-1/2 -translate-x-1/2 origin-bottom flex flex-col items-center justify-end"
-                    style={{ height: "45%", width: "8px" }}
-                >
-                    <div className="w-full h-full drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
-                        <svg
-                            className="w-full h-full overflow-visible"
-                            viewBox="0 0 10 100"
-                            preserveAspectRatio="xMidYMax meet"
-                        >
-                            {/* Main shaft up to pivot */}
-                            <rect x="4" y="0"   width="2" height="85" className="fill-[#e3342f]" />
-                            {/* Counter-weight tail (extends "below" origin in SVG = behind pivot on screen) */}
-                            <rect x="3" y="85"  width="4" height="20" className="fill-[#e3342f]" rx="2" />
-                            {/* Lollipop circle near tip */}
-                            <circle cx="5" cy="15" r="4"   className="fill-[#e3342f]" />
-                            <circle cx="5" cy="15" r="2.2" className="fill-[#f1faee]" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+            <g ref={minuteRef} style={{ transformOrigin: "100px 100px" }}>
+                {/* Depth shadow */}
+                <polygon
+                    points="100,27 103.2,62 101.5,94 100.9,117 100,120 99.1,117 98.5,94 96.8,62"
+                    fill="rgba(0,0,0,0.55)"
+                    transform="translate(0.5, 1)"
+                />
+                {/* Main body */}
+                <polygon
+                    points="100,27 103.2,62 101.5,94 100.9,117 100,120 99.1,117 98.5,94 96.8,62"
+                    fill="url(#grad-minute)"
+                />
+                {/* Faceted ridge */}
+                <polygon
+                    points="100,27 100.8,64 100.4,94 100.2,118 100,120 99.8,118 99.6,94 99.2,64"
+                    fill="rgba(255,255,255,0.24)"
+                />
+                {/* Spine */}
+                <line x1="100" y1="27" x2="100" y2="118"
+                    stroke="rgba(255,255,255,0.12)" strokeWidth="0.3" />
+            </g>
 
-            {/* Center pinion cap */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40">
-                <div className="w-[6px] sm:w-[10px] h-[6px] sm:h-[10px] rounded-full bg-neutral-300 shadow-[0_2px_5px_rgba(0,0,0,0.8)] border border-neutral-400 flex items-center justify-center">
-                    <div className="w-[40%] h-[40%] rounded-full bg-neutral-200" />
-                </div>
-            </div>
-        </div>
+            {/*
+                SECOND HAND — razor needle:
+                Paper-thin shaft tapering to a needle point.
+                Small teardrop counterweight below pivot.
+            */}
+            <g ref={secondRef} style={{ transformOrigin: "100px 100px" }}>
+                {/* Main needle shaft — tapers from 0 at tip to 1px at pivot */}
+                <polygon
+                    points="100,30 100.5,82 100,95 99.5,82"
+                    fill="url(#grad-second)"
+                />
+                {/* Counterweight tail — wider teardrop */}
+                <polygon
+                    points="100,95 101.2,108 100,124 98.8,108"
+                    fill="url(#grad-second)"
+                    opacity="0.85"
+                />
+                {/* Specular streak along needle */}
+                <line x1="100" y1="30" x2="100" y2="90"
+                    stroke="rgba(255,255,255,0.45)" strokeWidth="0.3" />
+            </g>
+
+            {/* ── Pinion cap — multi-layer mirror chrome ─────────── */}
+            {/* Outer ring */}
+            <circle cx="100" cy="100" r="6.5"
+                fill="url(#grad-cap)"
+                stroke="rgba(255,255,255,0.18)" strokeWidth="0.6" />
+            {/* Dark recess */}
+            <circle cx="100" cy="100" r="3.2" fill="#080808" />
+            {/* Inner chrome dot */}
+            <circle cx="100" cy="100" r="1.8"
+                fill="url(#grad-cap)" />
+            {/* Specular highlight */}
+            <circle cx="98.6" cy="98.4" r="1" fill="rgba(255,255,255,0.70)" />
+        </svg>
     );
 }
 
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
-
 export function Clock() {
-    const hourHandRef   = useRef<HTMLDivElement>(null);
-    const minuteHandRef = useRef<HTMLDivElement>(null);
-    const secondHandRef = useRef<HTMLDivElement>(null);
+    const hourHandRef   = useRef<SVGGElement>(null);
+    const minuteHandRef = useRef<SVGGElement>(null);
+    const secondHandRef = useRef<SVGGElement>(null);
     const rafRef        = useRef<number | null>(null);
 
     useEffect(() => {
-        /*
-            FIX 1: updateClock defined INSIDE useEffect so it is never redefined
-            on re-renders. Previously it was defined in component scope, meaning
-            every render created a new function — if a render happened mid-loop,
-            a second RAF loop would start, the old rafRef value would be overwritten,
-            and the first loop could never be cancelled (memory + CPU leak).
-
-            FIX 2: isMounted state removed entirely. The hands render immediately
-            (no SSR value needed — they start at rotate(0deg) and update on the
-            first RAF tick). Removing isMounted eliminates the flash where hands
-            were absent for one render cycle and avoids the extra state + re-render.
-
-            FIX 3: Hour hand formula corrected from ÷24 to ÷12.
-            Original: (hours + minutes / 60) * (360 / 24)  → 15° per hour (24-hr clock)
-            Fixed:    (hours % 12 + minutes / 60) * 30      → 30° per hour (12-hr clock)
-            At 3:00 the hand now correctly points to the 3 position instead of the 6.
-        */
         const tick = () => {
             const now     = new Date();
             const hours   = now.getHours();
@@ -230,9 +382,9 @@ export function Clock() {
             const seconds = now.getSeconds();
             const millis  = now.getMilliseconds();
 
-            const hourDeg   = (hours % 12 + minutes / 60) * 30;          // FIX 3
+            const hourDeg   = (hours % 12 + minutes / 60) * 30;
             const minuteDeg = (minutes + seconds / 60) * 6;
-            const secondDeg = (seconds + millis / 1000) * 6;             // smooth sweep
+            const secondDeg = (seconds + millis / 1000) * 6; // smooth sweep
 
             if (hourHandRef.current)
                 hourHandRef.current.style.transform   = `rotate(${hourDeg}deg)`;
@@ -245,49 +397,113 @@ export function Clock() {
         };
 
         rafRef.current = requestAnimationFrame(tick);
-
         return () => {
             if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
         };
-    }, []); // empty deps — tick is stable, defined inside the effect
+    }, []);
 
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.92 }}
+            initial={{ opacity: 0, scale: 0.88 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, ease: "easeOut" }}
-            className="relative w-full h-full rounded-full bg-gradient-to-br from-[#c0c0c0] to-[#888888] dark:from-[#333] dark:to-[#111] shadow-[inset_0_0_20px_rgba(0,0,0,0.3),_0_10px_30px_rgba(0,0,0,0.5)] flex items-center justify-center"
+            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+            className="relative w-full h-full rounded-full flex items-center justify-center"
+            style={{
+                /* Outermost housing — true black with micro rim catch-light */
+                background: "radial-gradient(circle at 36% 26%, #1c1c1c 0%, #060606 40%, #000000 100%)",
+                boxShadow: `
+                    0 0 0 1px   rgba(255,255,255,0.18),
+                    0 0 0 2.5px rgba(0,0,0,1),
+                    0 0 0 4px   rgba(255,255,255,0.05),
+                    0 24px 80px rgba(0,0,0,1),
+                    0 8px  32px rgba(0,0,0,0.9),
+                    inset 0 2px 4px rgba(255,255,255,0.18),
+                    inset 0 -2px 4px rgba(0,0,0,1)
+                `,
+            }}
         >
-            {/* Brushed metallic bezel */}
-            <div className="absolute inset-[3%] sm:inset-[4%] rounded-full bg-[conic-gradient(from_0deg,#e0e0e0_0%,#f8f8f8_10%,#b0b0b0_20%,#e0e0e0_30%,#a0a0a0_40%,#f0f0f0_50%,#b0b0b0_60%,#e8e8e8_70%,#9c9c9c_80%,#fafafa_90%,#e0e0e0_100%)] dark:bg-[conic-gradient(from_0deg,#222_0%,#555_10%,#111_20%,#444_30%,#1a1a1a_40%,#666_50%,#151515_60%,#555_70%,#0a0a0a_80%,#666_90%,#222_100%)] flex items-center justify-center shadow-[inset_0_2px_8px_rgba(0,0,0,0.4),_0_2px_10px_rgba(0,0,0,0.5)] border border-neutral-300 dark:border-neutral-700">
+            {/* ── Bezel ring — conic brushed gunmetal ──────────────── */}
+            <div
+                className="absolute rounded-full pointer-events-none"
+                style={{
+                    inset: "1.5%",
+                    background: `conic-gradient(
+                        from 108deg,
+                        #050505  0%,
+                        #505050 10%,
+                        #0a0a0a 22%,
+                        #686868 33%,
+                        #080808 44%,
+                        #555555 55%,
+                        #060606 66%,
+                        #606060 77%,
+                        #080808 88%,
+                        #484848 94%,
+                        #050505 100%
+                    )`,
+                    boxShadow: `
+                        inset 0 0 0 1px rgba(255,255,255,0.12),
+                        inset 0 1px 2px rgba(255,255,255,0.08),
+                        0 0 20px rgba(0,0,0,0.9)
+                    `,
+                }}
+            />
 
-                {/* Deep sunburst dial */}
-                <div className="absolute inset-[10%] sm:inset-[12%] rounded-full bg-[#111] dark:bg-black shadow-[inset_0_0_30px_rgba(0,0,0,0.9),_0_0_15px_rgba(0,0,0,0.6)] overflow-hidden border border-white/10">
+            {/* ── Dial glass reflection ring ────────────────────────── */}
+            <div
+                className="absolute rounded-full pointer-events-none z-10"
+                style={{
+                    inset: "4.5%",
+                    background: `conic-gradient(
+                        from 210deg,
+                        rgba(255,255,255,0.045) 0%,
+                        transparent 18%,
+                        transparent 82%,
+                        rgba(255,255,255,0.025) 100%
+                    )`,
+                }}
+            />
 
-                    {/* Sunburst reflection */}
-                    <div className="absolute inset-0 bg-[conic-gradient(from_45deg,rgba(255,255,255,0.02)_0%,transparent_20%,transparent_40%,rgba(255,255,255,0.03)_50%,transparent_60%,transparent_80%,rgba(255,255,255,0.02)_100%)] pointer-events-none mix-blend-screen" />
+            {/* ── Main dial face ────────────────────────────────────── */}
+            <div
+                className="absolute rounded-full overflow-hidden"
+                style={{
+                    inset: "5%",
+                    /* Near-absolute black with a cold blue-black micro tint at centre */
+                    background: `
+                        radial-gradient(circle at 40% 34%, #0c0d0e 0%, #050506 38%, #010101 100%)
+                    `,
+                    boxShadow: `
+                        inset 0 0 80px rgba(0,0,0,1),
+                        inset 0 0 20px rgba(0,0,0,0.95),
+                        inset 0 4px 30px rgba(0,0,50,0.15)
+                    `,
+                }}
+            >
+                {/* Sapphire-glass gloss arc — brighter, more realistic */}
+                <div
+                    className="absolute inset-0 pointer-events-none z-20"
+                    style={{
+                        background: `
+                            radial-gradient(
+                                ellipse 70% 38% at 50% 8%,
+                                rgba(255,255,255,0.10) 0%,
+                                rgba(255,255,255,0.03) 50%,
+                                transparent 100%
+                            )
+                        `,
+                    }}
+                />
 
-                    <DialMarkers />
-                    <HourMarkers />
-
-                    {/* Branding */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none z-0">
-                        <div className="absolute top-[28%] sm:top-[26%] flex flex-col items-center">
-                            <span className="font-serif font-bold text-white text-[10px] sm:text-[14px] tracking-wider drop-shadow-md">PESHAL</span>
-                            <span className="font-sans font-medium text-white/90 text-[5px] sm:text-[7px] tracking-[0.2em] mt-0.5 drop-shadow-md">CLOUD ENGINEER</span>
-                        </div>
-                        <div className="absolute bottom-[28%] sm:bottom-[26%] flex flex-col items-center">
-                            <span className="font-serif italic text-white/90 text-[6px] sm:text-[9px] tracking-wide drop-shadow-md">Software</span>
-                            <span className="font-sans font-medium text-white/80 text-[4px] sm:text-[6px] tracking-[0.15em] mt-0.5 uppercase drop-shadow-md">Officially Certified</span>
-                        </div>
-                    </div>
-
-                    <Hands
-                        hourRef={hourHandRef}
-                        minuteRef={minuteHandRef}
-                        secondRef={secondHandRef}
-                    />
-                </div>
+                <DialTicks />
+                <MinuteLabels />
+                <InnerRing />
+                <HourMarkers />
+                <Hands
+                    hourRef={hourHandRef}
+                    minuteRef={minuteHandRef}
+                    secondRef={secondHandRef}
+                />
             </div>
         </motion.div>
     );
