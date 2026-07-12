@@ -38,13 +38,13 @@ interface GlobeProps {
 // ---------------------------------------------------------------------------
 const DARK_CONFIG: Required<GlobeConfig> = {
   markers: [{ location: [20.5937, 78.9629], size: 0.09 }],
-  baseColor:   [0.3,  0.3,  0.3 ],   // was [0,0,0] — this is what made the dots vanish
+  baseColor:   [0.08, 0.08, 0.08],   // near-black sphere — only the dots should read as lit
   markerColor: [1.0,  1.0,  1.0 ],   // bright white India dot
-  glowColor:   [1.0,  1.0,  1.0 ],   // was [0.08,0.08,0.08] — too dim to read as a halo
-  mapBrightness: 6,                  // was 8 — dots were overexposed/blurred
+  glowColor:   [0.15, 0.15, 0.15],   // faint halo, not a light source
+  mapBrightness: 4.5,                // dots visible but not glowing/blown out
   mapSamples:    16000,
   dark:    1,
-  diffuse: 1.2,
+  diffuse: 0.8,                      // lower diffuse = less surface sheen off the sphere itself
   theta:   0.3,
   rotationSpeed: 0.003,
 };
@@ -169,9 +169,9 @@ export function Globe({ config = {}, className = "" }: GlobeProps) {
 
   const canvasRef = useGlobe(mergedConfig);
 
-  const glowOuter = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)";
-  const glowMid   = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.08)";
-  const glowCore  = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
+  const glowOuter = isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.05)";
+  const glowMid   = isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.08)";
+  const glowCore  = isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.06)";
 
   return (
     // FIX #5: reference globe visibly fills more of its column. Bumping the
