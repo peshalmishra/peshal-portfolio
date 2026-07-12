@@ -26,13 +26,13 @@ interface GlobeProps {
 
 const DARK_CONFIG: Required<GlobeConfig> = {
   markers: [{ location: [20.5937, 78.9629], size: 0.08 }],
-  baseColor:   [0.05, 0.05, 0.05],   // near-black globe surface
+  baseColor:   [0.0,  0.0,  0.0 ],   // pure black ocean surface
   markerColor: [1.0,  1.0,  1.0 ],   // bright white India dot
-  glowColor:   [0.12, 0.12, 0.12],   // subtle white halo
-  mapBrightness: 6,                  // ← key: makes continents clearly visible
+  glowColor:   [0.08, 0.08, 0.08],   // very subtle dark halo
+  mapBrightness: 8,                  // bright white land dots
   mapSamples:    16000,
-  dark:    1,
-  diffuse: 3.5,                      // ← spreads light across landmasses
+  dark:    1,                        // maximum darkness
+  diffuse: 1.2,                      // low — keeps surface matte dark
   theta:   0.3,
   rotationSpeed: 0.003,
 };
