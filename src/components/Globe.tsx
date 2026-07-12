@@ -26,30 +26,24 @@ interface GlobeProps {
 
 const DARK_CONFIG: Required<GlobeConfig> = {
   markers: [{ location: [20.5937, 78.9629], size: 0.05 }],
-
   baseColor: [0.04, 0.04, 0.04],
-  markerColor: [0.6, 0.6, 0.6],
+  markerColor: [0.7, 0.7, 0.7],
   glowColor: [0.05, 0.05, 0.05],
-
-  mapBrightness: 0.3,
+  mapBrightness: 0.35,
   mapSamples: 16000,
-
   dark: 1,
-  diffuse: 0.1,
+  diffuse: 0.12,
   theta: 0.3,
   rotationSpeed: 0.003,
 };
 
 const LIGHT_CONFIG: Required<GlobeConfig> = {
   markers: [{ location: [20.5937, 78.9629], size: 0.05 }],
-
   baseColor: [0.96, 0.96, 0.96],
   markerColor: [0.3, 0.3, 0.3],
   glowColor: [0.92, 0.92, 0.92],
-
   mapBrightness: 0.25,
   mapSamples: 16000,
-
   dark: 0,
   diffuse: 0.1,
   theta: 0.3,
@@ -61,175 +55,119 @@ function useTheme() {
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
-    setTimeout(() => setIsDark(media.matches), 0);
-
-    const listener = () => setIsDark(media.matches);
+    setIsDark(media.matches);
+    const listener = (e: MediaQueryListEvent) => setIsDark(e.matches);
     media.addEventListener("change", listener);
-
     return () => media.removeEventListener("change", listener);
   }, []);
 
   return isDark;
 }
 
+// ---------------------------------------------------------------------------
+// useGlobe — manages the cobe instance lifecycle cleanly
+// ---------------------------------------------------------------------------
 function useGlobe(config: Required<GlobeConfig>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const globeRef = useRef<GlobeInstance | null>(null);
-  const phiRef = useRef(0);
-  const widthRef = useRef(0);
-  const initializationAttemptedRef = useRef(false);
+  const globeRef  = useRef<GlobeInstance | null>(null);
+  const phiRef    = useRef(0);
 
-  const initGlobe = useCallback(() => {
-    const canvas = canvasRef.current;
-    const parent = canvas?.parentElement;
-    
-    if (!canvas || !parent) {
-      console.warn("[Globe] Canvas or parent not found");
-      return;
-    }
-
-    const width = parent.clientWidth;
-    if (width <= 0) {
-      console.warn("[Globe] Invalid parent width:", width);
-      return;
-    }
-
-    widthRef.current = width;
-
+  // Destroy helper
+  const destroy = useCallback(() => {
     if (globeRef.current) {
-      try {
-        globeRef.current.destroy();
-      } catch (e) {
-        console.warn("[Globe] Error destroying previous globe:", e);
-      }
+      try { globeRef.current.destroy(); } catch (_) { /* ignore */ }
       globeRef.current = null;
     }
+  }, []);
+
+  // Create helper — reads current canvas size from its parent
+  const create = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // Prefer the canvas's own rendered size; fall back to parent
+    const w = canvas.offsetWidth || canvas.parentElement?.offsetWidth || 0;
+    if (w <= 0) return;
+
+    destroy();
+
+    const dpr  = Math.min(window.devicePixelRatio ?? 1, 2);
+    const size = w;
 
     try {
-      const dpr = Math.min(window.devicePixelRatio ?? 1, 2);
-      const size = width;
-
       globeRef.current = createGlobe(canvas, {
         devicePixelRatio: dpr,
-        width: size * dpr,
+        width:  size * dpr,
         height: size * dpr,
-
-        phi: 0,
-        theta: config.theta,
-        dark: config.dark,
+        phi:    phiRef.current,
+        theta:  config.theta,
+        dark:   config.dark,
         diffuse: config.diffuse,
-
-        mapSamples: config.mapSamples,
+        mapSamples:    config.mapSamples,
         mapBrightness: config.mapBrightness,
-
-        baseColor: config.baseColor,
+        baseColor:   config.baseColor,
         markerColor: config.markerColor,
-        glowColor: config.glowColor,
-
-        markers: config.markers,
-
+        glowColor:   config.glowColor,
+        markers:     config.markers,
         onRender: (state) => {
-          state.phi = phiRef.current;
+          state.phi   = phiRef.current;
           phiRef.current += config.rotationSpeed;
         },
       });
-
-      console.debug("[Globe] Initialized successfully");
-    } catch (error) {
-      console.error("[Globe] Failed to initialize:", error);
+    } catch (err) {
+      console.error("[Globe] Failed to initialize:", err);
     }
-  }, [config]);
+  }, [config, destroy]);
 
   useEffect(() => {
-    const parent = canvasRef.current?.parentElement;
-    if (!parent) return;
-
-    // Try initial initialization
-    if (!initializationAttemptedRef.current) {
-      initializationAttemptedRef.current = true;
-      
-      // First attempt: immediate
-      if (parent.clientWidth > 0) {
-        initGlobe();
-      } else {
-        // Second attempt: after DOM is ready
-        const timer = setTimeout(() => {
-          if (parent.clientWidth > 0) {
-            initGlobe();
-          }
-        }, 100);
-        
-        return () => clearTimeout(timer);
-      }
-    }
-
-    // ResizeObserver for responsive updates
-    const observer = new ResizeObserver((entries) => {
-      const w = entries[0]?.contentRect.width ?? 0;
-      if (w > 0 && w !== widthRef.current) {
-        widthRef.current = w;
-        initGlobe();
-      }
+    // Initial creation — defer one frame so layout is settled
+    const raf = requestAnimationFrame(() => {
+      create();
     });
 
-    observer.observe(parent);
+    // Resize observer to recreate on size changes
+    const canvas = canvasRef.current;
+    const parent = canvas?.parentElement;
+    if (!parent) return () => { cancelAnimationFrame(raf); destroy(); };
+
+    const ro = new ResizeObserver(() => {
+      // Small debounce via RAF
+      requestAnimationFrame(() => create());
+    });
+    ro.observe(parent);
 
     return () => {
-      if (globeRef.current) {
-        try {
-          globeRef.current.destroy();
-        } catch (e) {
-          console.warn("[Globe] Error destroying globe on unmount:", e);
-        }
-        globeRef.current = null;
-      }
-      observer.disconnect();
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+      destroy();
     };
-  }, [initGlobe]);
+  }, [create, destroy]);
 
   return canvasRef;
 }
 
+// ---------------------------------------------------------------------------
+// Globe component
+// ---------------------------------------------------------------------------
 export function Globe({ config = {}, className = "" }: GlobeProps) {
   const isDark = useTheme();
-  const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const baseConfig = isDark ? DARK_CONFIG : LIGHT_CONFIG;
-  const mergedConfig: Required<GlobeConfig> = { ...baseConfig, ...config };
+  const baseConfig   = isDark ? DARK_CONFIG : LIGHT_CONFIG;
+  const mergedConfig = { ...baseConfig, ...config } as Required<GlobeConfig>;
 
   const canvasRef = useGlobe(mergedConfig);
 
-  const glowOuter = isDark
-    ? "rgba(255,255,255,0.07)"
-    : "rgba(0,0,0,0.05)";
-
-  const glowMid = isDark
-    ? "rgba(255,255,255,0.10)"
-    : "rgba(0,0,0,0.08)";
-
-  const glowCore = isDark
-    ? "rgba(255,255,255,0.06)"
-    : "rgba(0,0,0,0.06)";
-
-  if (!isClient) {
-    return (
-      <div
-        className={`relative w-full aspect-square max-w-[600px] flex items-center justify-center ${className}`}
-        style={{ background: isDark ? "#0a0a0a" : "#f5f5f5" }}
-      />
-    );
-  }
+  const glowOuter = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)";
+  const glowMid   = isDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.08)";
+  const glowCore  = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
 
   return (
     <div
-      className={`relative w-full aspect-square max-w-[600px] flex items-center justify-center ${className}`}
+      className={`relative w-full aspect-square flex items-center justify-center ${className}`}
       aria-label="Interactive 3D globe"
       role="img"
     >
+      {/* Outer ambient glow */}
       <div
         className="absolute pointer-events-none"
         style={{
@@ -239,6 +177,7 @@ export function Globe({ config = {}, className = "" }: GlobeProps) {
         }}
       />
 
+      {/* Mid glow */}
       <div
         className="absolute pointer-events-none"
         style={{
@@ -248,6 +187,7 @@ export function Globe({ config = {}, className = "" }: GlobeProps) {
         }}
       />
 
+      {/* Pulsing core glow */}
       <motion.div
         className="absolute pointer-events-none"
         style={{
@@ -259,15 +199,16 @@ export function Globe({ config = {}, className = "" }: GlobeProps) {
         transition={{ duration: 4, ease: "easeInOut", repeat: Infinity }}
       />
 
+      {/* Canvas — fills the square container */}
       <motion.canvas
         ref={canvasRef}
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
         style={{
-          width: "100%",
-          height: "100%",
-          contain: "layout paint size",
+          width:   "100%",
+          height:  "100%",
+          display: "block",
         }}
       />
     </div>
