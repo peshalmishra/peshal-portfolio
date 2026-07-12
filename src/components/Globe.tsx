@@ -25,28 +25,28 @@ interface GlobeProps {
 }
 
 const DARK_CONFIG: Required<GlobeConfig> = {
-  markers: [{ location: [20.5937, 78.9629], size: 0.05 }],
-  baseColor: [0.04, 0.04, 0.04],
-  markerColor: [0.7, 0.7, 0.7],
-  glowColor: [0.05, 0.05, 0.05],
-  mapBrightness: 0.35,
-  mapSamples: 16000,
-  dark: 1,
-  diffuse: 0.12,
-  theta: 0.3,
+  markers: [{ location: [20.5937, 78.9629], size: 0.08 }],
+  baseColor:   [0.05, 0.05, 0.05],   // near-black globe surface
+  markerColor: [1.0,  1.0,  1.0 ],   // bright white India dot
+  glowColor:   [0.12, 0.12, 0.12],   // subtle white halo
+  mapBrightness: 6,                  // ← key: makes continents clearly visible
+  mapSamples:    16000,
+  dark:    1,
+  diffuse: 3.5,                      // ← spreads light across landmasses
+  theta:   0.3,
   rotationSpeed: 0.003,
 };
 
 const LIGHT_CONFIG: Required<GlobeConfig> = {
-  markers: [{ location: [20.5937, 78.9629], size: 0.05 }],
-  baseColor: [0.96, 0.96, 0.96],
-  markerColor: [0.3, 0.3, 0.3],
-  glowColor: [0.92, 0.92, 0.92],
-  mapBrightness: 0.25,
-  mapSamples: 16000,
-  dark: 0,
-  diffuse: 0.1,
-  theta: 0.3,
+  markers: [{ location: [20.5937, 78.9629], size: 0.08 }],
+  baseColor:   [0.9,  0.9,  0.9 ],
+  markerColor: [0.2,  0.2,  0.2 ],
+  glowColor:   [0.85, 0.85, 0.85],
+  mapBrightness: 5,
+  mapSamples:    16000,
+  dark:    0,
+  diffuse: 2.5,
+  theta:   0.3,
   rotationSpeed: 0.003,
 };
 

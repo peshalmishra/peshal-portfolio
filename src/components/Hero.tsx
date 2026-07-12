@@ -283,12 +283,11 @@ export function Hero({ isLoaded = true, hidePreloader = false }: HeroProps) {
                             <div
                                 className="absolute pointer-events-none"
                                 style={{
-                                    bottom:       "-20%",
-                                    left:         "-12%",
-                                    width:        "80%",
-                                    aspectRatio:  "1 / 1",
-                                    opacity:      0.9,
-                                    mixBlendMode: "screen",
+                                    bottom:      "-30%",
+                                    left:        "-20%",
+                                    width:       "90%",
+                                    aspectRatio: "1 / 1",
+                                    opacity:     0.95,
                                 }}
                             >
                                 <Globe />
