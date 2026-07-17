@@ -352,7 +352,277 @@ export function About() {
                 </motion.div>
             </section>
 
-            {/* ── 3. Experience timeline ──────────────────────────────────── */}
+            {/* ── 3. Field of Expertise ───────────────────────────────────── */}
+            <section className="relative z-10 bg-white dark:bg-[#050505] text-black dark:text-white py-32 px-6 md:px-12 lg:px-24 border-t border-neutral-100 dark:border-white/5 overflow-hidden">
+                {/* Ambient glow blobs */}
+                <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.08)_0%,transparent_70%)] blur-3xl" />
+                <div className="pointer-events-none absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.08)_0%,transparent_70%)] blur-3xl" />
+
+                <motion.div
+                    initial={{ opacity: 0, y: 32 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-80px" }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="max-w-6xl mx-auto"
+                >
+                    {/* Section header */}
+                    <div className="flex flex-col items-center text-center mb-20">
+                        <p className="text-xs font-bold tracking-[0.2em] text-neutral-400 uppercase mb-4">What I Bring to the Table</p>
+                        <h2 className="text-5xl md:text-6xl lg:text-[72px] font-black tracking-tight leading-[1.1]">
+                            Field of{" "}
+                            <span className="bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-500 bg-clip-text text-transparent font-serif italic pr-4 pb-2">
+                                Expertise
+                            </span>
+                        </h2>
+                        <p className="mt-6 max-w-2xl text-base md:text-lg text-neutral-500 dark:text-neutral-400 font-light leading-relaxed">
+                            Specialised in Cloud Infrastructure and DevOps engineering — designing resilient, automated, and scalable systems that power modern software delivery.
+                        </p>
+                    </div>
+
+                    {/* Top domain cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+                        {/* Cloud Engineering */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-60px" }}
+                            transition={{ duration: 0.7, ease: "easeOut" }}
+                            className="group relative rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/8 via-cyan-500/5 to-transparent p-8 hover:border-blue-500/40 transition-all duration-500 overflow-hidden"
+                        >
+                            <div className="pointer-events-none absolute top-0 right-0 w-56 h-56 bg-[radial-gradient(circle,rgba(59,130,246,0.15)_0%,transparent_70%)] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                            <div className="flex items-start gap-4 mb-6">
+                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/25">
+                                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-black text-neutral-900 dark:text-white tracking-tight">Cloud Engineering</h3>
+                                    <p className="text-sm text-blue-500 font-semibold mt-0.5">AWS · Azure · GCP</p>
+                                </div>
+                            </div>
+                            <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed mb-6">
+                                Designing and managing scalable cloud infrastructure — from compute and storage to networking and serverless — with a focus on cost optimisation and high availability.
+                            </p>
+                            <div className="space-y-3">
+                                {[
+                                    { label: "AWS Core Services (EC2, S3, RDS, Lambda)", pct: 88 },
+                                    { label: "Infrastructure as Code (Terraform)", pct: 82 },
+                                    { label: "Cloud Networking & VPC Design", pct: 78 },
+                                    { label: "Serverless Architecture", pct: 75 },
+                                ].map((skill) => (
+                                    <div key={skill.label}>
+                                        <div className="flex justify-between items-center mb-1">
+                                            <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">{skill.label}</span>
+                                            <span className="text-xs font-bold text-blue-500">{skill.pct}%</span>
+                                        </div>
+                                        <div className="h-1.5 w-full rounded-full bg-neutral-200 dark:bg-white/8 overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                whileInView={{ width: `${skill.pct}%` }}
+                                                viewport={{ once: true }}
+                                                transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
+                                                className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400"
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
+
+                        {/* DevOps & CI/CD */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-60px" }}
+                            transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
+                            className="group relative rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-500/8 via-pink-500/5 to-transparent p-8 hover:border-purple-500/40 transition-all duration-500 overflow-hidden"
+                        >
+                            <div className="pointer-events-none absolute top-0 right-0 w-56 h-56 bg-[radial-gradient(circle,rgba(168,85,247,0.15)_0%,transparent_70%)] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                            <div className="flex items-start gap-4 mb-6">
+                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-purple-500/25">
+                                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-black text-neutral-900 dark:text-white tracking-tight">DevOps & CI/CD</h3>
+                                    <p className="text-sm text-purple-500 font-semibold mt-0.5">Automate · Ship · Iterate</p>
+                                </div>
+                            </div>
+                            <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed mb-6">
+                                Building automated delivery pipelines and operational workflows that enable teams to deploy with confidence, speed, and zero downtime.
+                            </p>
+                            <div className="space-y-3">
+                                {[
+                                    { label: "GitHub Actions & CI/CD Pipelines", pct: 85 },
+                                    { label: "Docker & Container Orchestration", pct: 83 },
+                                    { label: "Kubernetes (K8s) Cluster Management", pct: 76 },
+                                    { label: "GitOps & Release Automation", pct: 72 },
+                                ].map((skill) => (
+                                    <div key={skill.label}>
+                                        <div className="flex justify-between items-center mb-1">
+                                            <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">{skill.label}</span>
+                                            <span className="text-xs font-bold text-purple-500">{skill.pct}%</span>
+                                        </div>
+                                        <div className="h-1.5 w-full rounded-full bg-neutral-200 dark:bg-white/8 overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                whileInView={{ width: `${skill.pct}%` }}
+                                                viewport={{ once: true }}
+                                                transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
+                                                className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-400"
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    {/* Skill category grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-16">
+                        {[
+                            {
+                                icon: (
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                                    </svg>
+                                ),
+                                title: "Container Orchestration",
+                                color: "text-sky-500",
+                                iconBg: "bg-sky-500/15 border-sky-500/25",
+                                border: "border-sky-500/20 hover:border-sky-500/40",
+                                bg: "from-sky-500/5 to-transparent",
+                                skills: ["Docker", "Kubernetes (K8s)", "Helm Charts", "Docker Compose", "Container Registry", "Pod Autoscaling"],
+                            },
+                            {
+                                icon: (
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
+                                    </svg>
+                                ),
+                                title: "Infrastructure as Code",
+                                color: "text-orange-500",
+                                iconBg: "bg-orange-500/15 border-orange-500/25",
+                                border: "border-orange-500/20 hover:border-orange-500/40",
+                                bg: "from-orange-500/5 to-transparent",
+                                skills: ["Terraform", "AWS CloudFormation", "Ansible", "Pulumi", "ARM Templates", "CDK"],
+                            },
+                            {
+                                icon: (
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                    </svg>
+                                ),
+                                title: "Monitoring & Observability",
+                                color: "text-emerald-500",
+                                iconBg: "bg-emerald-500/15 border-emerald-500/25",
+                                border: "border-emerald-500/20 hover:border-emerald-500/40",
+                                bg: "from-emerald-500/5 to-transparent",
+                                skills: ["Prometheus", "Grafana", "AWS CloudWatch", "ELK Stack", "Datadog", "Jaeger (Tracing)"],
+                            },
+                            {
+                                icon: (
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                ),
+                                title: "Cloud Security & IAM",
+                                color: "text-red-500",
+                                iconBg: "bg-red-500/15 border-red-500/25",
+                                border: "border-red-500/20 hover:border-red-500/40",
+                                bg: "from-red-500/5 to-transparent",
+                                skills: ["AWS IAM & Policies", "Secrets Manager", "Security Groups", "VPC Isolation", "HTTPS / TLS", "OWASP Hardening"],
+                            },
+                            {
+                                icon: (
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                ),
+                                title: "Linux & Scripting",
+                                color: "text-yellow-500",
+                                iconBg: "bg-yellow-500/15 border-yellow-500/25",
+                                border: "border-yellow-500/20 hover:border-yellow-500/40",
+                                bg: "from-yellow-500/5 to-transparent",
+                                skills: ["Linux (Ubuntu/RHEL)", "Bash Scripting", "Shell Automation", "Cron Jobs", "SSH & Key Mgmt", "Systemd Services"],
+                            },
+                            {
+                                icon: (
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                    </svg>
+                                ),
+                                title: "Networking & DNS",
+                                color: "text-indigo-500",
+                                iconBg: "bg-indigo-500/15 border-indigo-500/25",
+                                border: "border-indigo-500/20 hover:border-indigo-500/40",
+                                bg: "from-indigo-500/5 to-transparent",
+                                skills: ["AWS VPC & Subnets", "Route 53 / DNS", "Load Balancers (ALB/NLB)", "CDN & CloudFront", "TCP/IP Fundamentals", "Nginx / Reverse Proxy"],
+                            },
+                        ].map((cat, i) => (
+                            <motion.div
+                                key={cat.title}
+                                initial={{ opacity: 0, y: 24 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-40px" }}
+                                transition={{ duration: 0.6, delay: i * 0.08 }}
+                                className={`group relative rounded-2xl border bg-gradient-to-br ${cat.bg} ${cat.border} p-6 hover:shadow-lg transition-all duration-300 backdrop-blur-sm overflow-hidden`}
+                            >
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className={`w-9 h-9 rounded-xl border flex items-center justify-center flex-shrink-0 ${cat.iconBg} ${cat.color}`}>
+                                        {cat.icon}
+                                    </div>
+                                    <h3 className="text-sm font-black text-neutral-900 dark:text-white tracking-tight leading-tight">{cat.title}</h3>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    {cat.skills.map((s) => (
+                                        <span
+                                            key={s}
+                                            className="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-neutral-100 dark:bg-white/6 text-neutral-600 dark:text-neutral-300 border border-neutral-200 dark:border-white/8 hover:bg-neutral-200 dark:hover:bg-white/12 transition-colors cursor-default"
+                                        >
+                                            {s}
+                                        </span>
+                                    ))}
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+
+                    {/* Bottom highlight strip */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-40px" }}
+                        transition={{ duration: 0.7, ease: "easeOut" }}
+                        className="relative rounded-3xl border border-neutral-200 dark:border-white/8 overflow-hidden"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-cyan-500/5 dark:from-blue-500/10 dark:via-purple-500/10 dark:to-cyan-500/10" />
+                        <div className="relative px-8 py-8 flex flex-wrap gap-6 items-center justify-between">
+                            <div>
+                                <p className="text-xs font-bold tracking-[0.2em] text-neutral-400 uppercase mb-1">Core Platforms</p>
+                                <p className="text-lg font-black text-neutral-900 dark:text-white tracking-tight">AWS · Azure · GCP · DigitalOcean</p>
+                            </div>
+                            <div className="h-10 w-px bg-neutral-200 dark:bg-white/10 hidden md:block" />
+                            <div>
+                                <p className="text-xs font-bold tracking-[0.2em] text-neutral-400 uppercase mb-1">Certifications & Paths</p>
+                                <p className="text-lg font-black text-neutral-900 dark:text-white tracking-tight">AWS Solutions Architect · CKA (Kubernetes)</p>
+                            </div>
+                            <div className="h-10 w-px bg-neutral-200 dark:bg-white/10 hidden md:block" />
+                            <div>
+                                <p className="text-xs font-bold tracking-[0.2em] text-neutral-400 uppercase mb-1">Availability</p>
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                    <p className="text-lg font-black text-emerald-500 tracking-tight">Open to Opportunities</p>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            </section>
+
+            {/* ── 4. Experience timeline ──────────────────────────────────── */}
             <section id="experience" ref={experienceRef}
                 className="relative z-10 min-h-screen bg-white dark:bg-[#050505] text-black dark:text-white py-32 px-6 md:px-12 lg:px-24"
             >
